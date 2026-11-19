@@ -55,6 +55,9 @@ main{position:relative;overflow:hidden;background:var(--sea)}
 .legend{position:absolute;left:12px;bottom:12px;background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:8px 10px;font-size:12px;color:var(--ink2);max-width:min(560px,calc(100% - 24px))}
 .legend .row{display:flex;flex-wrap:wrap;gap:4px 12px;align-items:center}
 .legend .k{display:inline-flex;align-items:center;gap:5px}
+.newb{display:inline-block;font-size:10px;font-weight:700;letter-spacing:.3px;padding:0 6px;border-radius:8px;background:#fab219;color:#412402;margin-left:6px;vertical-align:1px}
+.crit{margin:10px 0;padding:8px 10px;border:1px dashed var(--line2);border-radius:8px;font-size:12px;color:var(--ink2)}
+.crit summary{cursor:pointer;font-weight:600}
 .lbl{font-size:10px;fill:var(--ink2);paint-order:stroke;stroke:var(--sea);stroke-width:3px;pointer-events:none}
 @keyframes pulse{0%{opacity:.55}100%{opacity:0}}
 .pulse{animation:pulse 2s ease-out infinite}
@@ -73,6 +76,8 @@ main{position:relative;overflow:hidden;background:var(--sea)}
     <button class="chip on" data-layer="blocs"><span class="sw" style="background:#2a78d6"></span>Khối thương mại</button>
     <button class="chip on" data-layer="conflicts"><span class="sw" style="background:#e34948"></span>Xung đột</button>
     <button class="chip on" data-layer="logistics"><span class="sw" style="background:#1baf7a"></span>Logistics</button>
+    <button class="chip on" data-layer="news"><span class="sw" style="background:#fab219"></span>Tin nổi bật</button>
+    <button id="newCount" style="border-color:#fab219"></button>
     <span class="spacer"></span>
     <button id="center" title="Đổi tâm bản đồ">Tâm: Thái Bình Dương</button>
     <span class="small" id="updated"></span>
@@ -80,6 +85,7 @@ main{position:relative;overflow:hidden;background:var(--sea)}
 
   <aside>
     <div class="tabs">
+      <button data-tab="news">Tin mới</button>
       <button data-tab="blocs" class="act">Khối</button>
       <button data-tab="conflicts">Xung đột</button>
       <button data-tab="logistics">Logistics</button>
@@ -101,6 +107,19 @@ main{position:relative;overflow:hidden;background:var(--sea)}
       <div id="chokeList"></div>
       <h3>Tuyến vận tải chính</h3>
       <div id="routeList"></div>
+    </div>
+    <div class="pane" id="pane-news">
+      <div class="small">Tin quan trọng về địa chính trị, thương mại, logistics, năng lượng, công nghệ chiến lược. Nhãn <span class="newb">MỚI</span> = trong 7 ngày gần nhất.</div>
+      <details class="crit"><summary>Cách mình lọc tin</summary>
+        Mỗi tin được chấm điểm, chỉ tin đạt từ 3/5 điểm mới lên bản đồ:<br>
+        +1 gắn được với một địa điểm cụ thể<br>
+        +1 thuộc chủ đề bản đồ (xung đột, thương mại, logistics, năng lượng, công nghệ chiến lược như chip, AI, đất hiếm)<br>
+        +1 là thay đổi thật (luật có hiệu lực, chiến sự leo thang hay ngừng bắn, tuyến đường đóng/mở), không phải bình luận<br>
+        +1 tác động nhiều nước hoặc chuỗi cung ứng, giá dầu, cước tàu<br>
+        +1 liên quan trực tiếp Việt Nam hoặc Đông Nam Á<br>
+        Loại bỏ: tin ra sản phẩm, giá cổ phiếu, tin đồn. Ví dụ: Nvidia ra chip mới → không lên; Mỹ cấm bán chip Nvidia qua Đông Nam Á → lên (5/5).
+      </details>
+      <div id="newsList"></div>
     </div>
     <div class="pane" id="pane-sources">
       <div id="sourceList" class="small"></div>
@@ -156,13 +175,13 @@ const BLOCS = {
 const CONFLICTS = [
   {name:'Nga – Ukraine', level:'critical', status:'active', since:'02/2022', at:[37.5,48.2], countries:['804','643'], killed:64439,
    note:'Xung đột đẫm máu nhất năm 2026, số người chết gấp hơn 13 lần bất kỳ cuộc chiến nào khác.'},
-  {name:'Iran – Israel / Mỹ', level:'critical', status:'active', since:'28/02/2026', at:[54.5,28.5], countries:['364','376'], killed:3859,
+  {name:'Iran – Israel / Mỹ', level:'critical', status:'active', changed:'2026-11-18', since:'28/02/2026', at:[54.5,28.5], countries:['364','376'], killed:3859,
    note:'Từ tháng 9 chủ yếu giao tranh trên biển; tháng 11 lan lại vào đất liền. Ngày 18/11 Iran tấn công Kuwait và Bahrain sau khi Mỹ đánh đảo Qeshm ở eo Hormuz.'},
-  {name:'Israel – Gaza (Hamas)', level:'high', status:'ceasefire', since:'10/2023', at:[34.4,31.45], countries:['376','275'], killed:1155,
+  {name:'Israel – Gaza (Hamas)', level:'high', status:'ceasefire', changed:'2026-11-18', since:'10/2023', at:[34.4,31.45], countries:['376','275'], killed:1155,
    note:'Ngừng bắn từ tháng 10/2025, nhưng ngày 18/11/2026 Israel tuyên bố một đợt tấn công mới ở miền trung Gaza.'},
   {name:'Israel – Hezbollah (Liban)', level:'elevated', status:'ceasefire', since:'03/2026', at:[35.7,33.4], countries:['422','376'], killed:4593,
    note:'Bùng phát lại tháng 3/2026; ngừng bắn tạm thời từ 16/4 nhưng Israel vẫn không kích. Đàm phán bế tắc.'},
-  {name:'Yemen / Biển Đỏ (Houthi)', level:'high', status:'active', since:'07/2026 (lần này)', at:[44.5,15.5], countries:['887'], killed:4808,
+  {name:'Yemen / Biển Đỏ (Houthi)', level:'high', status:'active', changed:'2026-11-17', since:'07/2026 (lần này)', at:[44.5,15.5], countries:['887'], killed:4808,
    note:'Giao tranh nổ ra lại tháng 7/2026 sau 4 năm đình chiến. Houthi đe dọa tàu qua Bab el-Mandeb và tấn công đường ống Đông–Tây của Ả Rập Xê Út.'},
   {name:'Nội chiến Sudan (SAF – RSF)', level:'high', status:'active', since:'04/2023', at:[30.0,13.3], countries:['729'], killed:3280,
    note:'Quân đội giành lại đất ở Kordofan. Hàng triệu người phải sơ tán, nạn đói nghiêm trọng.'},
@@ -198,9 +217,9 @@ const CONFLICTS = [
 
 /* status: blocked | high | moderate | normal | watch | seasonal */
 const CHOKEPOINTS = [
-  {name:'Eo Hormuz', at:[56.4,26.5], status:'blocked',
+  {name:'Eo Hormuz', at:[56.4,26.5], status:'blocked', changed:'2026-11-18',
    note:'Bị Iran phong tỏa phần lớn từ 28/02/2026. Tàu đi theo hành lang phía nam có Mỹ hộ tống, trung bình khoảng 28 lượt/ngày (12–14/11/2026). IMO ghi nhận 138 vụ việc với tàu thương mại, 25 thuyền viên thiệt mạng.'},
-  {name:'Eo Bab el-Mandeb', at:[43.4,12.6], status:'high',
+  {name:'Eo Bab el-Mandeb', at:[43.4,12.6], status:'high', changed:'2026-11-17',
    note:'Houthi đe dọa và tấn công trở lại. Ngày 17/11/2026 có 44 lượt tàu đi qua.'},
   {name:'Kênh đào Suez', at:[32.35,30.6], status:'moderate',
    note:'Hãng tàu container đang quay lại dần. Đầu tháng 10/2026 công suất container qua kênh lần đầu vượt một nửa mức trước khủng hoảng; dự kiến trở lại hoàn toàn vào quý 1/2027.'},
@@ -258,6 +277,69 @@ const ROUTES = [
    path:[[108.94,34.34],[103.8,36.05],[87.6,43.8],[80.4,44.2],[76.9,43.25],[51.2,43.65],[49.87,40.4],[44.8,41.7],[43.1,40.6],[32.85,39.9],[28.98,41.0],[19.04,47.5],[16.37,48.2]]}
 ];
 
+/* ---------------------------------------------------------------------
+   TIN NỔI BẬT. Mỗi tin: date (yyyy-mm-dd), cat, score 1–5, at [kinh độ, vĩ độ],
+   countries (tuỳ chọn, mã ISO số), note, src (URL).
+   Tin trong NEW_DAYS ngày tính tới UPDATED được gắn nhãn MỚI.
+   Mục CONFLICTS / CHOKEPOINTS có thể thêm changed:'yyyy-mm-dd' khi có diễn biến mới.
+
+   TIÊU CHÍ LỌC (chấm điểm, chỉ đưa lên bản đồ tin đạt ≥ 3 điểm):
+   +1 Gắn được với một địa điểm hoặc khu vực cụ thể trên bản đồ.
+   +1 Thuộc chủ đề của bản đồ: xung đột, thương mại/thuế quan/khối, logistics,
+      năng lượng, công nghệ chiến lược (chip, AI, đất hiếm).
+   +1 Là thay đổi trạng thái thật: luật/lệnh có hiệu lực, chiến sự bắt đầu/leo thang/
+      ngừng bắn, tuyến đường đóng/mở — không phải bình luận hay dự đoán.
+   +1 Tác động vượt khỏi một nước: chuỗi cung ứng, giá dầu, cước tàu, nhiều quốc gia.
+   +1 Liên quan trực tiếp tới Việt Nam hoặc Đông Nam Á.
+   Bắt buộc: có ít nhất một nguồn uy tín. Loại: tin sản phẩm, giá cổ phiếu, tin đồn.
+   --------------------------------------------------------------------- */
+const NEW_DAYS = 7;
+const CATS = {
+  conflict:{c:'#e34948', t:'Xung đột'},
+  trade:   {c:'#2a78d6', t:'Thương mại'},
+  tech:    {c:'#6250d6', t:'Công nghệ chiến lược'},
+  energy:  {c:'#854F0B', t:'Năng lượng'},
+  logistics:{c:'#1baf7a', t:'Logistics'}
+};
+const NEWS = [
+  {date:'2026-11-19', cat:'trade', score:5, at:[114.06,22.54], countries:['840','156'],
+   title:'Trump gặp Tập Cận Bình tại APEC Thâm Quyến',
+   note:'Thượng đỉnh Mỹ – Trung bên lề Hội nghị APEC 2026 ở Thâm Quyến, diễn ra ngay sau khi Mỹ siết thêm xuất khẩu chip AI.',
+   src:'https://www.koreajoongangdaily.com/business/us-to-curb-chinas-access-to-ai-chips-as-trump-heads-to-asia/12977479'},
+  {date:'2026-11-18', cat:'conflict', score:5, at:[47.9,29.3], countries:['364','414','048'],
+   title:'Iran tấn công Kuwait và Bahrain',
+   note:'Iran nhắm vào căn cứ Ali Al Salem (Kuwait), nơi có quân Mỹ, sau khi Mỹ đánh đảo Qeshm trong eo Hormuz.',
+   src:'https://justsecurity.org/165038/early-edition-november-18-2026'},
+  {date:'2026-11-18', cat:'conflict', score:4, at:[34.35,31.4], countries:['376','275'],
+   title:'Israel tuyên bố tấn công mới ở miền trung Gaza',
+   note:'Thỏa thuận ngừng bắn từ tháng 10/2025 lung lay; "Hội đồng Hòa bình" cáo buộc cả Israel và Hamas không thực hiện cam kết.',
+   src:'https://blackwing.im/blog/how-many-wars-are-there-in-the-world'},
+  {date:'2026-11-17', cat:'energy', score:4, at:[46.7,24.7], countries:['682','887'],
+   title:'Houthi phóng drone vào đường ống dầu Đông–Tây của Ả Rập Xê Út',
+   note:'Năm drone nhắm vào hai trạm bơm ở khu vực Riyadh. Đây là tuyến ống giúp Ả Rập Xê Út xuất dầu né eo Hormuz.',
+   src:'https://justsecurity.org/165038/early-edition-november-18-2026'},
+  {date:'2026-11-17', cat:'energy', score:3, at:[58.2,24.8],
+   title:'Giá dầu Brent quanh 92–93 USD/thùng',
+   note:'Tấn công tàu chở dầu ở Hormuz đẩy giá lên, nhưng sản lượng Trung Đông tăng và IEA dự báo dư cung kéo giá xuống.',
+   src:'https://engine.online/news/brent-declines-as-supply-shortage-concerns-ease-8431'},
+  {date:'2026-11-16', cat:'tech', score:5, at:[104.0,3.5], countries:['156','458','764','360','702','076'],
+   title:'Mỹ siết chip AI: chặn Trung Quốc truy cập từ xa qua Đông Nam Á',
+   note:'Bộ Thương mại Mỹ (BIS) yêu cầu giấy phép xuất khẩu chip AI sang Malaysia, Thái Lan, Indonesia, Singapore và Brazil, nhằm chặn doanh nghiệp Trung Quốc thuê trung tâm dữ liệu ở nước thứ ba. Bắc Kinh gọi đây là "cưỡng ép kinh tế".',
+   src:'https://aljazeera.com/economy/2026/11/17/us-moves-to-block-chinas-remote-access-to-ai-chips-amid-nvidia-scandal'},
+  {date:'2026-11-12', cat:'tech', score:4, at:[-121.96,37.37], countries:['840'],
+   title:'Jensen Huang từ chức CEO Nvidia',
+   note:'Từ chức giữa bê bối liên quan một công ty trung tâm dữ liệu ở Singapore. Vụ việc khiến Washington chuyển sang hướng siết xuất khẩu chip.',
+   src:'https://bravenewcoin.com/insights/nvidia-ai-chip-restrictions-expand-as-us-closes-cloud-computing-loophole-for-china'},
+  {date:'2026-11-11', cat:'logistics', score:3, at:[-79.7,9.1], countries:['591'],
+   title:'Kênh Panama nâng lên 34 lượt tàu/ngày',
+   note:'Mực nước cải thiện, nới mớn nước tối đa ở âu tàu Neopanamax.',
+   src:'https://www.ajot.com/news/panama-canal-increases-daily-transits-to-34-and-raises-maximum-allowable-draft-at-neopanamax-locks'},
+  {date:'2026-10-14', cat:'logistics', score:3, at:[32.35,30.6], countries:['818'],
+   title:'Hãng tàu container quay lại kênh Suez',
+   note:'Công suất container qua Suez lần đầu vượt một nửa mức trước khủng hoảng; dự kiến trở lại hoàn toàn quý 1/2027.',
+   src:'https://www.seatrade-maritime.com/containers/full-suez-return-for-container-carriers-expected-by-q1-2027'}
+];
+
 const SOURCES = [
   ['Danh sách thành viên APEC — DFAT (Úc)','https://dfat.gov.au/trade/organisations/apec/asia-pacific-economic-cooperation-apec'],
   ['166 thành viên WTO — Fibre2Fashion (3/2026)','https://www.fibre2fashion.com/news/textile-news/total-number-of-tfa-ratifications-stands-at-162-out-of-166-wto-members-308764-newsdetails.htm'],
@@ -288,13 +370,17 @@ for (const k in BLOCS){const b=BLOCS[k];b.m=b.members?S(b.members):null;b.no=b.n
 function inBloc(k,id){ if(id===undefined) return 0; const b=BLOCS[k];
   if(b.no) return b.no.has(id)?0:1; if(b.m.has(id)) return 1; if(b.p.has(id)) return 2; return 0; }
 const name = d => VN[d.id] || d.properties.name;
+const UPD = (([d,m,y]) => new Date(+y, m-1, +d))(UPDATED.split('/'));
+const isNew = iso => { if (!iso) return false; const t = new Date(iso+'T00:00:00'); const days = (UPD - t)/86400000; return days >= 0 && days <= NEW_DAYS; };
+const NEWB = '<span class="newb">MỚI</span>';
+const fmtDate = iso => iso.split('-').reverse().join('/');
 
 document.getElementById('updated').textContent = 'Cập nhật: ' + UPDATED;
 const dark = matchMedia('(prefers-color-scheme: dark)').matches;
 const css = v => getComputedStyle(document.documentElement).getPropertyValue(v).trim();
 
 /* ---------- state ---------- */
-const layers = {blocs:true, conflicts:true, logistics:true};
+const layers = {blocs:true, conflicts:true, logistics:true, news:true};
 const onBlocs = new Set(['APEC']);
 let pacific = true;
 
@@ -303,7 +389,7 @@ const svg = d3.select('#map');
 const defs = svg.append('defs');
 const root = svg.append('g');
 const gSphere = root.append('g'), gLand = root.append('g'), gBorder = root.append('g'),
-      gRoutes = root.append('g'), gConf = root.append('g'), gChoke = root.append('g'), gLbl = root.append('g');
+      gRoutes = root.append('g'), gConf = root.append('g'), gChoke = root.append('g'), gNews = root.append('g'), gLbl = root.append('g');
 let W, H, projection, path, features = [], k = 1;
 
 function makeProjection(){
@@ -372,7 +458,7 @@ function drawAll(){
     .on('click',(e,d)=>showCountry(d));
   gBorder.selectAll('path').data(features.filter(d=>conflictCountries.has(d.id))).join('path').attr('d',path)
     .attr('fill','none').attr('stroke','#e34948').attr('stroke-opacity',.6).attr('stroke-dasharray','3 2').style('pointer-events','none');
-  drawRoutes(); drawConflicts(); drawChokes(); recolor(); rescale();
+  drawRoutes(); drawConflicts(); drawChokes(); drawNews(); recolor(); rescale();
 }
 function recolor(){
   gLand.selectAll('path').attr('fill',fillOf);
@@ -381,6 +467,7 @@ function recolor(){
   gRoutes.style('display', layers.logistics ? null : 'none');
   gChoke.style('display', layers.logistics ? null : 'none');
   gLbl.style('display', layers.logistics ? null : 'none');
+  gNews.style('display', layers.news ? null : 'none');
   drawLegend();
 }
 function drawRoutes(){
@@ -398,6 +485,7 @@ function drawConflicts(){
   const sel = gConf.selectAll('g.cf').data(CONFLICTS).join(enter=>{
     const g = enter.append('g').attr('class','cf').style('cursor','pointer');
     g.append('circle').attr('class','halo pulse');
+    g.append('circle').attr('class','nring').attr('fill','none').attr('stroke','#fab219');
     g.append('circle').attr('class','core');
     return g; });
   sel.attr('transform', c=>{const p=projection(c.at); return `translate(${p[0]},${p[1]})`;});
@@ -409,6 +497,7 @@ function drawConflicts(){
 function drawChokes(){
   const sel = gChoke.selectAll('g.ck').data(CHOKEPOINTS).join(enter=>{
     const g = enter.append('g').attr('class','ck').style('cursor','pointer');
+    g.append('circle').attr('class','nring').attr('fill','none').attr('stroke','#fab219');
     g.append('rect'); return g; });
   sel.attr('transform', c=>{const p=projection(c.at); return `translate(${p[0]},${p[1]})`;});
   sel.select('rect').attr('fill',c=>STATUS[c.status].c);
@@ -416,6 +505,20 @@ function drawChokes(){
      .on('click',(e,c)=>selectChoke(c));
   gLbl.selectAll('text').data(CHOKEPOINTS).join('text').attr('class','lbl').text(c=>c.name)
      .attr('x',c=>projection(c.at)[0]).attr('y',c=>projection(c.at)[1]);
+}
+function drawNews(){
+  const sel = gNews.selectAll('g.nw').data(NEWS.filter(n=>n.score>=3)).join(enter=>{
+    const g = enter.append('g').attr('class','nw').style('cursor','pointer');
+    g.append('circle').attr('class','nring pulse').attr('fill','#fab219');
+    g.append('rect').attr('class','box');
+    g.append('text').attr('class','ic').attr('text-anchor','middle').attr('fill','#fff').style('font-weight','700').style('pointer-events','none');
+    return g; });
+  sel.attr('transform', n=>{const p=projection(n.at); return `translate(${p[0]},${p[1]})`;});
+  sel.select('.box').attr('fill',n=>CATS[n.cat].c);
+  sel.select('.ic').text('!');
+  sel.select('.nring').style('display', n=>isNew(n.date)?null:'none');
+  sel.on('mousemove',(e,n)=>showTip(e,`<b>${n.title}</b><br>${CATS[n.cat].t} · ${fmtDate(n.date)}${isNew(n.date)?' · MỚI':''}`)).on('mouseleave',hideTip)
+     .on('click',(e,n)=>selectNews(n));
 }
 /* Giữ kích thước nét, chấm, chữ không đổi khi phóng to */
 function rescale(){
@@ -432,6 +535,11 @@ function rescale(){
      .attr('transform','rotate(45)').attr('stroke',css('--panel')).attr('stroke-width',1.5/k);
   gLbl.selectAll('text').style('font-size', (11/k)+'px').attr('dx',8/k).attr('dy',3/k).style('stroke-width',(3/k)+'px')
      .style('display', k >= 2.2 ? null : 'none');
+  gConf.selectAll('g.cf').select('.nring').attr('r', d => isNew(d.changed) ? LEVEL[d.level].r/k*Math.min(k,1.6)*0.95 : 0).attr('stroke-width', 2.5/k);
+  gChoke.selectAll('g.ck').select('.nring').attr('r', d => isNew(d.changed) ? 9/k : 0).attr('stroke-width', 2/k);
+  gNews.selectAll('.box').attr('width',14/k).attr('height',14/k).attr('x',-7/k).attr('y',-7/k).attr('rx',3/k).attr('stroke',css('--panel')).attr('stroke-width',1.5/k);
+  gNews.selectAll('.ic').style('font-size',(11/k)+'px').attr('dy',4/k);
+  gNews.selectAll('.nring').attr('r',13/k);
   defs.selectAll('pattern.stripe').attr('patternTransform', `rotate(45) scale(${1/k})`);
 }
 
@@ -476,14 +584,14 @@ const order = {critical:0,high:1,elevated:2,watch:3};
 const conflictList = document.getElementById('conflictList');
 [...CONFLICTS].sort((a,b)=>order[a.level]-order[b.level]).forEach(c=>{
   const el = document.createElement('div'); el.className='item';
-  el.innerHTML = `<span class="dot" style="background:${LEVEL[c.level].c}"></span><div><div class="t">${c.name}</div>
+  el.innerHTML = `<span class="dot" style="background:${LEVEL[c.level].c}"></span><div><div class="t">${c.name}${isNew(c.changed)?NEWB:''}</div>
     <div class="s">${LEVEL[c.level].t}${c.status==='ceasefire'?' · ngừng bắn':''} · từ ${c.since}${c.killed?` · ${c.killed.toLocaleString('vi-VN')} người chết (2026)`:''}</div></div>`;
   el.onclick = () => { selectConflict(c); mark(conflictList, el); };
   c._el = el; conflictList.appendChild(el);
 });
 function selectConflict(c){
   layers.conflicts = true; syncChips(); recolor();
-  setDetail(`<b style="font-size:15px">${c.name}</b> ${badge(LEVEL[c.level].c, LEVEL[c.level].t)}${c.status==='ceasefire'?badge('#888780','Ngừng bắn'):''}<br>
+  setDetail(`<b style="font-size:15px">${c.name}</b>${isNew(c.changed)?NEWB:''} ${badge(LEVEL[c.level].c, LEVEL[c.level].t)}${c.status==='ceasefire'?badge('#888780','Ngừng bắn'):''}<br>
     Bắt đầu: ${c.since}${c.killed?`<br>Người chết 2026 (tạm tính, tháng 1–9): <b>${c.killed.toLocaleString('vi-VN')}</b>`:''}<br><br>${c.note}`);
   const geo = {type:'FeatureCollection', features: features.filter(f=>c.countries.includes(f.id))};
   geo.features.length && c.countries.length <= 2 && !c.countries.includes('643') && !c.countries.includes('156') ? flyToBounds(geo) : flyTo(c.at, 5);
@@ -495,7 +603,7 @@ const chokeList = document.getElementById('chokeList'), routeList = document.get
 const sorder = {blocked:0,high:1,moderate:2,watch:3,seasonal:4,normal:5};
 [...CHOKEPOINTS].sort((a,b)=>sorder[a.status]-sorder[b.status]).forEach(c=>{
   const el = document.createElement('div'); el.className='item';
-  el.innerHTML = `<span class="dot" style="background:${STATUS[c.status].c};border-radius:2px;transform:rotate(45deg)"></span><div><div class="t">${c.name}</div><div class="s">${STATUS[c.status].t}</div></div>`;
+  el.innerHTML = `<span class="dot" style="background:${STATUS[c.status].c};border-radius:2px;transform:rotate(45deg)"></span><div><div class="t">${c.name}${isNew(c.changed)?NEWB:''}</div><div class="s">${STATUS[c.status].t}</div></div>`;
   el.onclick = () => { selectChoke(c); mark(chokeList, el); }; c._el = el; chokeList.appendChild(el);
 });
 [...ROUTES].sort((a,b)=>sorder[a.status]-sorder[b.status]).forEach(r=>{
@@ -504,7 +612,7 @@ const sorder = {blocked:0,high:1,moderate:2,watch:3,seasonal:4,normal:5};
   el.onclick = () => { selectRoute(r); mark(routeList, el); }; r._el = el; routeList.appendChild(el);
 });
 function selectChoke(c){ layers.logistics = true; syncChips(); recolor();
-  setDetail(`<b style="font-size:15px">${c.name}</b> ${badge(STATUS[c.status].c, STATUS[c.status].t)}<br><br>${c.note}`);
+  setDetail(`<b style="font-size:15px">${c.name}</b>${isNew(c.changed)?NEWB:''} ${badge(STATUS[c.status].c, STATUS[c.status].t)}<br><br>${c.note}`);
   flyTo(c.at, 7); if (c._el) mark(chokeList, c._el); }
 function selectRoute(r){ layers.logistics = true; syncChips(); recolor();
   setDetail(`<b style="font-size:15px">${r.name}</b> ${badge(STATUS[r.status].c, STATUS[r.status].t)}<br>${r.type==='rail'?'Đường sắt':'Đường biển'} · tuyến minh họa<br><br>${r.note}`);
@@ -512,6 +620,22 @@ function selectRoute(r){ layers.logistics = true; syncChips(); recolor();
   setTimeout(()=>gRoutes.selectAll('.ln').transition().duration(600).attr('opacity',.9), 3500);
   flyToBounds({type:'LineString', coordinates:r.path}); if (r._el) mark(routeList, r._el); }
 function mark(list, el){ document.querySelectorAll('.item.sel').forEach(x=>x.classList.remove('sel')); el.classList.add('sel'); }
+
+/* news list */
+const newsList = document.getElementById('newsList');
+[...NEWS].filter(n=>n.score>=3).sort((a,b)=>b.date.localeCompare(a.date)||b.score-a.score).forEach(n=>{
+  const el = document.createElement('div'); el.className='item';
+  el.innerHTML = `<span class="dot" style="background:${CATS[n.cat].c};border-radius:3px"></span><div><div class="t">${n.title}${isNew(n.date)?NEWB:''}</div>
+    <div class="s">${fmtDate(n.date)} · ${CATS[n.cat].t} · ${'★'.repeat(n.score)}</div></div>`;
+  el.onclick = () => { selectNews(n); mark(newsList, el); }; n._el = el; newsList.appendChild(el);
+});
+function selectNews(n){ layers.news = true; syncChips(); recolor();
+  setDetail(`<b style="font-size:15px">${n.title}</b>${isNew(n.date)?NEWB:''}<br>${badge(CATS[n.cat].c, CATS[n.cat].t)} <span class="small">${fmtDate(n.date)} · mức quan trọng ${n.score}/5</span><br><br>${n.note}<br><br><a href="${n.src}" target="_blank" rel="noopener" style="color:var(--accent)">Nguồn ↗</a>`);
+  flyTo(n.at, 5); if (n._el) mark(newsList, n._el); }
+const nNew = NEWS.filter(n=>n.score>=3 && isNew(n.date)).length + CONFLICTS.filter(c=>isNew(c.changed)).length + CHOKEPOINTS.filter(c=>isNew(c.changed)).length;
+const nc = document.getElementById('newCount');
+nc.innerHTML = `<span class="newb" style="margin:0 4px 0 0">MỚI</span>${nNew} cập nhật tuần này`;
+nc.onclick = () => document.querySelector('.tabs button[data-tab=news]').click();
 
 /* sources */
 document.getElementById('sourceList').innerHTML = `<p>Dữ liệu cập nhật ngày <b>${UPDATED}</b>. Tình hình xung đột và tuyến vận tải thay đổi liên tục, hãy đối chiếu nguồn mới nhất.</p>` +
@@ -525,6 +649,7 @@ function drawLegend(){
   if (layers.blocs && onBlocs.size) h += `<div class="row">${[...onBlocs].map(b=>sw(BLOCS[b].color,b)).join('')}</div>`;
   if (layers.conflicts) h += `<div class="row" style="margin-top:4px">${['critical','high','elevated','watch'].map(l=>sw(LEVEL[l].c,LEVEL[l].t,'dot')).join('')}<span class="k"><span style="width:10px;height:10px;border-radius:50%;border:2px solid #e34948;box-sizing:border-box"></span>Ngừng bắn</span></div>`;
   if (layers.logistics) h += `<div class="row" style="margin-top:4px">${['blocked','high','moderate','normal','seasonal'].map(s=>sw(STATUS[s].c,STATUS[s].t,'line')).join('')}<span class="k">◆ điểm nghẽn · - - đường sắt</span></div>`;
+  if (layers.news) h += `<div class="row" style="margin-top:4px">${Object.values(CATS).map(c=>sw(c.c,c.t)).join('')}<span class="k"><span style="width:10px;height:10px;border-radius:50%;border:2px solid #fab219;box-sizing:border-box"></span>Mới trong 7 ngày</span></div>`;
   const lg = document.getElementById('legend'); lg.innerHTML = h; lg.style.display = h ? 'block' : 'none';
 }
 
