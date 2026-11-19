@@ -1,0 +1,548 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Bản đồ địa chính trị — khối thương mại, xung đột, logistics</title>
+<style>
+:root{
+  --bg:#f7f6f2;--panel:#ffffff;--ink:#1b1b1a;--ink2:#55544f;--muted:#8a8882;--line:rgba(0,0,0,.10);--line2:rgba(0,0,0,.18);
+  --land:#dcdad2;--landStroke:#f7f6f2;--sea:#eef2f5;--accent:#2a78d6;--accentBg:#e6f1fb;--hover:#f1efe8;
+}
+@media (prefers-color-scheme: dark){
+  :root{--bg:#151515;--panel:#1d1d1c;--ink:#f0efec;--ink2:#c3c2b7;--muted:#898781;--line:rgba(255,255,255,.10);--line2:rgba(255,255,255,.2);
+  --land:#3a3a37;--landStroke:#151515;--sea:#1a1f24;--accent:#3987e5;--accentBg:#0c2a4a;--hover:#2a2a28;}
+}
+*{box-sizing:border-box}
+html,body{margin:0;height:100%;background:var(--bg);color:var(--ink);font:14px/1.5 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif}
+button{font:inherit;color:inherit;background:var(--panel);border:1px solid var(--line2);border-radius:8px;padding:5px 10px;cursor:pointer}
+button:hover{background:var(--hover)}
+.app{display:grid;grid-template-columns:340px 1fr;grid-template-rows:auto 1fr;height:100vh}
+header{grid-column:1/3;display:flex;align-items:center;gap:12px;flex-wrap:wrap;padding:10px 14px;border-bottom:1px solid var(--line);background:var(--panel)}
+header h1{font-size:16px;font-weight:600;margin:0 8px 0 0}
+.chip{display:flex;align-items:center;gap:6px;opacity:.55}
+.chip.on{opacity:1;border-color:var(--accent);background:var(--accentBg)}
+.chip .sw{width:10px;height:10px;border-radius:2px}
+.spacer{flex:1}
+.small{font-size:12px;color:var(--muted)}
+aside{border-right:1px solid var(--line);background:var(--panel);overflow:auto;display:flex;flex-direction:column}
+.tabs{display:flex;border-bottom:1px solid var(--line);position:sticky;top:0;background:var(--panel);z-index:2}
+.tabs button{flex:1;border:0;border-radius:0;border-bottom:2px solid transparent;padding:9px 4px;background:transparent;font-size:13px}
+.tabs button.act{border-bottom-color:var(--accent);color:var(--accent);font-weight:600}
+.pane{padding:12px 14px;display:none}
+.pane.act{display:block}
+.pane h3{font-size:13px;font-weight:600;margin:14px 0 6px;color:var(--ink2)}
+.item{display:flex;gap:8px;align-items:flex-start;padding:7px 8px;border-radius:8px;cursor:pointer;border:1px solid transparent}
+.item:hover{background:var(--hover)}
+.item.sel{border-color:var(--accent);background:var(--accentBg)}
+.item .dot{flex:none;width:10px;height:10px;border-radius:50%;margin-top:5px}
+.item .t{font-weight:500}
+.item .s{font-size:12px;color:var(--muted)}
+.bloc{display:flex;align-items:center;gap:8px;padding:6px 8px;border-radius:8px;cursor:pointer;user-select:none}
+.bloc:hover{background:var(--hover)}
+.bloc input{margin:0}
+.bloc .sw{width:12px;height:12px;border-radius:3px;flex:none}
+.bloc .n{font-size:12px;color:var(--muted)}
+#detail{margin:10px 14px;padding:10px 12px;border:1px solid var(--line);border-radius:10px;font-size:13px;display:none}
+#detail b{font-weight:600}
+.badge{display:inline-block;font-size:11px;padding:1px 8px;border-radius:10px;margin-left:4px;vertical-align:1px}
+main{position:relative;overflow:hidden;background:var(--sea)}
+#map{width:100%;height:100%;display:block;cursor:grab}
+#map:active{cursor:grabbing}
+.zoombar{position:absolute;right:12px;top:12px;display:flex;flex-direction:column;gap:6px}
+.zoombar button{width:34px;height:34px;padding:0;font-size:18px;line-height:1}
+#tip{position:absolute;pointer-events:none;background:var(--panel);border:1px solid var(--line2);border-radius:8px;padding:6px 9px;font-size:12px;max-width:280px;display:none;z-index:5;box-shadow:0 2px 8px rgba(0,0,0,.12)}
+.legend{position:absolute;left:12px;bottom:12px;background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:8px 10px;font-size:12px;color:var(--ink2);max-width:min(560px,calc(100% - 24px))}
+.legend .row{display:flex;flex-wrap:wrap;gap:4px 12px;align-items:center}
+.legend .k{display:inline-flex;align-items:center;gap:5px}
+.lbl{font-size:10px;fill:var(--ink2);paint-order:stroke;stroke:var(--sea);stroke-width:3px;pointer-events:none}
+@keyframes pulse{0%{opacity:.55}100%{opacity:0}}
+.pulse{animation:pulse 2s ease-out infinite}
+@media (max-width:820px){
+  .app{grid-template-columns:1fr;grid-template-rows:auto 55vh 1fr}
+  header{grid-column:1}
+  main{grid-row:2}
+  aside{grid-row:3;border-right:0;border-top:1px solid var(--line)}
+}
+</style>
+</head>
+<body>
+<div class="app">
+  <header>
+    <h1>Bản đồ địa chính trị</h1>
+    <button class="chip on" data-layer="blocs"><span class="sw" style="background:#2a78d6"></span>Khối thương mại</button>
+    <button class="chip on" data-layer="conflicts"><span class="sw" style="background:#e34948"></span>Xung đột</button>
+    <button class="chip on" data-layer="logistics"><span class="sw" style="background:#1baf7a"></span>Logistics</button>
+    <span class="spacer"></span>
+    <button id="center" title="Đổi tâm bản đồ">Tâm: Thái Bình Dương</button>
+    <span class="small" id="updated"></span>
+  </header>
+
+  <aside>
+    <div class="tabs">
+      <button data-tab="blocs" class="act">Khối</button>
+      <button data-tab="conflicts">Xung đột</button>
+      <button data-tab="logistics">Logistics</button>
+      <button data-tab="sources">Nguồn</button>
+    </div>
+    <div id="detail"></div>
+    <div class="pane act" id="pane-blocs">
+      <div class="small">Tick nhiều khối để chồng lên nhau. Nước thuộc nhiều khối đang bật sẽ có sọc nhiều màu. Màu nhạt = đối tác BRICS hoặc thuộc G20 qua EU. Bấm vào một nước trên bản đồ để xem nước đó thuộc khối nào.</div>
+      <div style="display:flex;gap:6px;margin:10px 0 4px"><button id="blocAll">Chọn hết</button><button id="blocNone">Bỏ chọn hết</button></div>
+      <div id="blocList"></div>
+    </div>
+    <div class="pane" id="pane-conflicts">
+      <div class="small">Bấm một xung đột để phóng tới. Kích thước chấm theo mức độ. Số người chết là số liệu tạm tính 2026 (UCDP, tháng 1–9), chỉ là mức tối thiểu.</div>
+      <div id="conflictList"></div>
+    </div>
+    <div class="pane" id="pane-logistics">
+      <div class="small">Đường kẻ là tuyến minh họa (xấp xỉ), không phải hải trình chính xác. Bấm để phóng tới.</div>
+      <h3>Điểm nghẽn (eo biển, kênh đào)</h3>
+      <div id="chokeList"></div>
+      <h3>Tuyến vận tải chính</h3>
+      <div id="routeList"></div>
+    </div>
+    <div class="pane" id="pane-sources">
+      <div id="sourceList" class="small"></div>
+    </div>
+  </aside>
+
+  <main>
+    <svg id="map"></svg>
+    <div class="zoombar">
+      <button id="zin" title="Phóng to">+</button>
+      <button id="zout" title="Thu nhỏ">−</button>
+      <button id="zreset" title="Về toàn cảnh" style="font-size:13px">⤢</button>
+    </div>
+    <div id="tip"></div>
+    <div class="legend" id="legend"></div>
+  </main>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/d3/7.8.5/d3.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/topojson/3.0.2/topojson.min.js"></script>
+<script>
+/* =====================================================================
+   DỮ LIỆU — sửa ở đây khi cần cập nhật. Mã nước = mã số ISO 3166-1
+   (ví dụ Việt Nam = "704"), trùng với id trong world-atlas.
+   ===================================================================== */
+const UPDATED = '19/11/2026';
+
+const EU27 = '040 056 100 191 196 203 208 233 246 250 276 300 348 372 380 428 440 442 470 528 616 620 642 703 705 724 752';
+
+const BLOCS = {
+  WTO:   {color:'#9FE1CB', full:'Tổ chức Thương mại Thế giới', note:'166 thành viên (EU và 27 nước EU tính riêng)',
+          /* WTO: liệt kê nước KHÔNG phải thành viên, còn lại coi là thành viên */
+          notMembers:'012 031 044 112 064 070 231 364 368 422 434 688 706 729 728 760 860 226 795 408 232 020 336 678 531 492 674 585 584 583 296 798 520 010 304 732 275 238 260'},
+  APEC:  {color:'#2a78d6', full:'Hợp tác Kinh tế châu Á–Thái Bình Dương', note:'21 nền kinh tế',
+          members:'036 096 124 152 156 344 360 392 410 458 484 554 598 604 608 643 702 158 764 840 704'},
+  ASEAN: {color:'#eb6834', full:'Hiệp hội các quốc gia Đông Nam Á', note:'11 nước',
+          members:'096 116 360 418 458 104 608 702 764 704 626'},
+  RCEP:  {color:'#eda100', full:'Hiệp định Đối tác Kinh tế Toàn diện Khu vực', note:'15 nước',
+          members:'096 116 360 418 458 104 608 702 764 704 156 392 410 036 554'},
+  CPTPP: {color:'#e87ba4', full:'Hiệp định Đối tác Toàn diện và Tiến bộ xuyên Thái Bình Dương', note:'12 nước',
+          members:'036 096 124 152 392 458 484 554 604 702 704 826'},
+  G7:    {color:'#6250d6', full:'Nhóm 7 nền kinh tế phát triển', note:'7 nước',
+          members:'840 124 392 826 276 250 380'},
+  G20:   {color:'#3B6D11', full:'Nhóm 20 nền kinh tế lớn', note:'19 nước + EU + Liên minh châu Phi',
+          members:'032 036 076 124 156 250 276 356 360 380 392 410 484 643 682 710 792 826 840', partners:EU27, partnerLabel:'qua EU'},
+  BRICS: {color:'#e34948', full:'Nhóm BRICS', note:'11 thành viên + 10 nước đối tác (Ả Rập Xê Út: các nguồn ghi nhận không thống nhất)',
+          members:'076 643 356 156 710 818 231 364 784 360 682', partners:'112 068 398 192 458 566 764 800 860 704', partnerLabel:'đối tác'},
+  EU:    {color:'#185FA5', full:'Liên minh châu Âu', note:'27 nước', members:EU27},
+  USMCA: {color:'#854F0B', full:'Hiệp định Mỹ–Mexico–Canada', note:'3 nước', members:'840 124 484'}
+};
+
+/* level: critical | high | elevated | watch ; status: 'active' | 'ceasefire' */
+const CONFLICTS = [
+  {name:'Nga – Ukraine', level:'critical', status:'active', since:'02/2022', at:[37.5,48.2], countries:['804','643'], killed:64439,
+   note:'Xung đột đẫm máu nhất năm 2026, số người chết gấp hơn 13 lần bất kỳ cuộc chiến nào khác.'},
+  {name:'Iran – Israel / Mỹ', level:'critical', status:'active', since:'28/02/2026', at:[54.5,28.5], countries:['364','376'], killed:3859,
+   note:'Từ tháng 9 chủ yếu giao tranh trên biển; tháng 11 lan lại vào đất liền. Ngày 18/11 Iran tấn công Kuwait và Bahrain sau khi Mỹ đánh đảo Qeshm ở eo Hormuz.'},
+  {name:'Israel – Gaza (Hamas)', level:'high', status:'ceasefire', since:'10/2023', at:[34.4,31.45], countries:['376','275'], killed:1155,
+   note:'Ngừng bắn từ tháng 10/2025, nhưng ngày 18/11/2026 Israel tuyên bố một đợt tấn công mới ở miền trung Gaza.'},
+  {name:'Israel – Hezbollah (Liban)', level:'elevated', status:'ceasefire', since:'03/2026', at:[35.7,33.4], countries:['422','376'], killed:4593,
+   note:'Bùng phát lại tháng 3/2026; ngừng bắn tạm thời từ 16/4 nhưng Israel vẫn không kích. Đàm phán bế tắc.'},
+  {name:'Yemen / Biển Đỏ (Houthi)', level:'high', status:'active', since:'07/2026 (lần này)', at:[44.5,15.5], countries:['887'], killed:4808,
+   note:'Giao tranh nổ ra lại tháng 7/2026 sau 4 năm đình chiến. Houthi đe dọa tàu qua Bab el-Mandeb và tấn công đường ống Đông–Tây của Ả Rập Xê Út.'},
+  {name:'Nội chiến Sudan (SAF – RSF)', level:'high', status:'active', since:'04/2023', at:[30.0,13.3], countries:['729'], killed:3280,
+   note:'Quân đội giành lại đất ở Kordofan. Hàng triệu người phải sơ tán, nạn đói nghiêm trọng.'},
+  {name:'Somalia – al-Shabaab', level:'high', status:'active', since:'2006', at:[45.3,2.8], countries:['706'], killed:2915,
+   note:'Khủng hoảng chính trị về việc kéo dài nhiệm kỳ chồng lên cuộc nổi dậy.'},
+  {name:'Ethiopia (Amhara – Fano, Tigray)', level:'elevated', status:'active', since:'2023', at:[38.6,12.2], countries:['231'], killed:2116,
+   note:'Chính phủ đánh lực lượng Fano ở Amhara; TPLF ở Tigray cũng quay lại chiến tranh.'},
+  {name:'Pakistan – Taliban Pakistan & biên giới Afghanistan', level:'high', status:'active', since:'10/2025', at:[70.8,33.6], countries:['586','004'], killed:2075,
+   note:'Gắn với xung đột biên giới rộng hơn giữa Pakistan và chính quyền Taliban ở Afghanistan.'},
+  {name:'Pakistan – phiến quân Baloch', level:'elevated', status:'active', since:'2004', at:[65.5,28.0], countries:['586'], killed:1365,
+   note:'Số người chết tăng hơn gấp 3 trong quý 3/2026.'},
+  {name:'Sahel (Burkina Faso, Mali, Niger – JNIM)', level:'high', status:'active', since:'2012', at:[-1.5,13.8], countries:['854','466','562'], killed:1781,
+   note:'Một hệ thống xung đột trải qua ba nước miền trung Sahel.'},
+  {name:'Đông bắc Nigeria – Nhà nước Hồi giáo (ISWAP)', level:'elevated', status:'active', since:'2009', at:[13.1,12.0], countries:['566'], killed:1668,
+   note:'Ban lãnh đạo ISWAP bị nhắm tới trong chiến dịch chung Nigeria – Mỹ tháng 5/2026.'},
+  {name:'Tây bắc Nigeria – băng nhóm vũ trang', level:'elevated', status:'active', since:'2026', at:[6.4,12.4], countries:['566'], killed:1615,
+   note:'Bắt cóc hàng loạt và tấn công làng mạc.'},
+  {name:'CHDC Congo – M23 / ADF', level:'elevated', status:'active', since:'01/2025', at:[29.0,-1.0], countries:['180'], killed:null,
+   note:'Miền đông Congo; ngày 4/11/2026 nghi phạm ADF tấn công các làng ở Bắc Kivu, 33 người chết.'},
+  {name:'Myanmar (nội chiến)', level:'elevated', status:'active', since:'02/2021', at:[96.0,21.5], countries:['104'], killed:null,
+   note:'Nội chiến sau đảo chính 2021.'},
+  {name:'Ấn Độ – Pakistan (Kashmir)', level:'elevated', status:'active', since:'05/2025', at:[75.0,34.3], countries:['356','586'], killed:null,
+   note:'Căng thẳng quân sự từ đợt giao tranh tháng 5/2025.'},
+  {name:'Trung Quốc – Đài Loan', level:'elevated', status:'active', since:'08/2022', at:[120.2,23.8], countries:['156','158'], killed:null,
+   note:'Căng thẳng quân sự, chưa có giao tranh. Ảnh hưởng trực tiếp tuyến hàng hải qua eo Đài Loan.'},
+  {name:'Nga – NATO (Ba Lan, Baltic)', level:'watch', status:'active', since:'02/2022', at:[23.5,55.2], countries:['616','440','428','233'], killed:null,
+   note:'Theo dõi: nguy cơ đụng độ ở sườn đông NATO.'},
+  {name:'Haiti – chiến tranh băng đảng', level:'elevated', status:'active', since:'2020', at:[-72.4,18.7], countries:['332'], killed:null,
+   note:'Bạo lực băng đảng diện rộng.'},
+  {name:'Mexico – chiến tranh ma túy', level:'elevated', status:'active', since:'2006', at:[-104.0,24.5], countries:['484'], killed:null,
+   note:'Xung đột giữa nhà nước và các băng đảng ma túy.'}
+];
+
+/* status: blocked | high | moderate | normal | watch | seasonal */
+const CHOKEPOINTS = [
+  {name:'Eo Hormuz', at:[56.4,26.5], status:'blocked',
+   note:'Bị Iran phong tỏa phần lớn từ 28/02/2026. Tàu đi theo hành lang phía nam có Mỹ hộ tống, trung bình khoảng 28 lượt/ngày (12–14/11/2026). IMO ghi nhận 138 vụ việc với tàu thương mại, 25 thuyền viên thiệt mạng.'},
+  {name:'Eo Bab el-Mandeb', at:[43.4,12.6], status:'high',
+   note:'Houthi đe dọa và tấn công trở lại. Ngày 17/11/2026 có 44 lượt tàu đi qua.'},
+  {name:'Kênh đào Suez', at:[32.35,30.6], status:'moderate',
+   note:'Hãng tàu container đang quay lại dần. Đầu tháng 10/2026 công suất container qua kênh lần đầu vượt một nửa mức trước khủng hoảng; dự kiến trở lại hoàn toàn vào quý 1/2027.'},
+  {name:'Mũi Hảo Vọng', at:[18.4,-34.8], status:'moderate',
+   note:'Tuyến vòng qua châu Phi thay cho Biển Đỏ – Suez. Dài hơn nhiều nhưng an toàn hơn; lượng tàu đang giảm dần khi các hãng quay lại Suez.'},
+  {name:'Eo Malacca', at:[99.8,3.6], status:'normal',
+   note:'Tuyến chính nối Ấn Độ Dương với Biển Đông; phần lớn dầu và hàng Á–Âu đi qua đây. Không nằm trong vùng xung đột hiện tại.'},
+  {name:'Eo Singapore', at:[104.0,1.2], status:'normal', note:'Cửa ra của Malacca, cạnh cảng Singapore.'},
+  {name:'Eo Lombok', at:[115.7,-8.7], status:'normal', note:'Tuyến thay thế Malacca cho tàu rất lớn.'},
+  {name:'Eo Đài Loan', at:[119.6,24.4], status:'watch',
+   note:'Tuyến chính dọc bờ biển Trung Quốc. Rủi ro từ căng thẳng Trung Quốc – Đài Loan.'},
+  {name:'Kênh đào Panama', at:[-79.7,9.1], status:'normal',
+   note:'Mực nước cải thiện; tháng 11/2026 nâng lên 34 lượt/ngày. Năm tài khóa 2026 có 13.951 lượt tàu (+4,1%).'},
+  {name:'Eo Gibraltar', at:[-5.6,35.95], status:'normal', note:'Cửa ngõ Địa Trung Hải – Đại Tây Dương.'},
+  {name:'Eo Dover', at:[1.4,51.0], status:'normal', note:'Một trong những eo biển đông tàu nhất thế giới.'},
+  {name:'Eo Bosphorus', at:[29.05,41.1], status:'watch', note:'Lối ra duy nhất của Biển Đen; chịu ảnh hưởng chiến tranh Nga – Ukraine.'},
+  {name:'Eo biển Đan Mạch', at:[12.7,55.9], status:'watch', note:'Lối ra của Biển Baltic; theo dõi căng thẳng Nga – NATO.'},
+  {name:'Eo Bering', at:[-169.0,65.8], status:'seasonal', note:'Cửa ngõ tuyến biển phía Bắc (Bắc Cực), chỉ khai thác được theo mùa.'}
+];
+
+/* type: sea | rail ; status như trên */
+const ROUTES = [
+  {name:'Á – Âu qua Suez', type:'sea', status:'moderate',
+   note:'Tuyến ngắn nhất Á–Âu. Đang hồi phục khi các hãng quay lại Biển Đỏ, nhưng rủi ro từ Houthi vẫn còn.',
+   path:[[122.2,30.8],[119.8,24.5],[115,21.2],[111,14],[106,5],[103.9,1.15],[101.2,2.7],[98.5,4.8],[95.5,6.2],[81,5.2],[65,12.5],[48,12.5],[43.4,12.6],[41.5,15.5],[38.5,20],[35.5,25],[33.8,27.6],[32.6,29.6],[32.35,30.6],[32.35,31.4],[28,33.6],[20,34.8],[11.8,37.4],[5,37.5],[-2,36.3],[-5.6,35.95],[-9.8,36.5],[-10,43.5],[-5.5,48.3],[1.4,51.0],[3.9,52.0]]},
+  {name:'Á – Âu vòng Mũi Hảo Vọng', type:'sea', status:'high',
+   note:'Tuyến vòng qua châu Phi, các hãng dùng từ cuối 2023 để tránh Biển Đỏ. Thêm nhiều ngày hành trình và chi phí nhiên liệu.',
+   path:[[122.2,30.8],[119.8,24.5],[115,21.2],[111,14],[106,5],[103.9,1.15],[101.2,2.7],[98.5,4.8],[95.5,6.2],[88,0],[70,-15],[45,-30],[25,-36.5],[18.3,-35.2],[10,-25],[0,-8],[-20,10],[-21,20],[-16,30],[-11,38],[-10,43.5],[-5.5,48.3],[1.4,51.0],[3.9,52.0]]},
+  {name:'Xuyên Thái Bình Dương (Thượng Hải – Los Angeles)', type:'sea', status:'normal',
+   note:'Tuyến container Á – Bờ Tây Mỹ, đông nhất thế giới về hàng tiêu dùng.',
+   path:[[122.2,30.8],[131,29.5],[141,33],[160,40],[180,45],[-160,45],[-135,40],[-118.3,33.6]]},
+  {name:'Việt Nam – Mỹ (Cái Mép – Los Angeles)', type:'sea', status:'normal',
+   note:'Tuyến xuất khẩu chính của Việt Nam sang Bờ Tây Mỹ, đi qua eo Luzon.',
+   path:[[107.05,10.3],[110,12],[117,17],[121.3,20.8],[135,28],[155,35],[180,40],[-150,38],[-118.3,33.6]]},
+  {name:'Á – Bờ Đông Mỹ qua Panama', type:'sea', status:'normal',
+   note:'Hàng châu Á tới New York, Savannah... đi qua kênh Panama.',
+   path:[[122.2,30.8],[131,29.5],[150,25],[180,20],[-150,15],[-110,10],[-85,7],[-79.55,8.85],[-79.9,9.4],[-78.5,12.5],[-74,19.8],[-72,26],[-73.5,38],[-73.9,40.4]]},
+  {name:'Xuyên Đại Tây Dương (Rotterdam – New York)', type:'sea', status:'normal',
+   note:'Tuyến nối châu Âu và Bắc Mỹ.',
+   path:[[3.9,52.0],[1.4,51.0],[-5.5,49.3],[-20,48],[-45,44],[-65,41.5],[-73.9,40.4]]},
+  {name:'Dầu vùng Vịnh → Đông Á (qua Hormuz, Malacca)', type:'sea', status:'blocked',
+   note:'Huyết mạch năng lượng của Trung Quốc, Nhật, Hàn, Ấn Độ. Đang bị gián đoạn nặng do eo Hormuz bị phong tỏa từ 28/02/2026.',
+   path:[[50.4,26.8],[52.5,26.5],[56.4,26.5],[57.5,25.3],[60.5,23.5],[65,15],[76,6],[81,5.2],[95.5,6.2],[98.5,4.8],[101.2,2.7],[103.9,1.15],[106,5],[110,12],[117,18],[121.3,20.8],[130,29],[137,33.3],[139.8,35.1]]},
+  {name:'Quặng sắt Brazil → Trung Quốc', type:'sea', status:'normal',
+   note:'Tàu hàng rời cỡ lớn, vòng qua Mũi Hảo Vọng và eo Sunda.',
+   path:[[-40.2,-20.3],[-30,-28],[0,-36],[18,-37],[40,-37],[80,-28],[100,-12],[105.8,-6.0],[107.1,-2.9],[107.5,1.5],[109.5,8],[116,19],[119.8,24.5],[122.6,31.5],[123,34],[120.6,35.8]]},
+  {name:'Tuyến biển phía Bắc (Bắc Cực)', type:'sea', status:'seasonal',
+   note:'Dọc bờ bắc nước Nga, chỉ đi được vào mùa hè – thu. Nga là bên kiểm soát.',
+   path:[[33.5,69.5],[40,71.5],[58.5,70.4],[70,73.5],[85,76],[105,77.8],[118,76.5],[130,74],[150,72],[170,70],[-172,67.5],[-169,65.8]]},
+  {name:'Đường sắt Trung Quốc – châu Âu (qua Nga)', type:'rail', status:'watch',
+   note:'Tàu hàng Trùng Khánh – Duisburg qua Kazakhstan, Nga, Belarus, Ba Lan. Chịu ảnh hưởng của cấm vận Nga.',
+   path:[[106.55,29.56],[108.94,34.34],[103.8,36.05],[87.6,43.8],[80.4,44.2],[71.45,51.17],[60.6,56.8],[49.1,55.8],[37.6,55.75],[27.56,53.9],[23.7,52.1],[21.0,52.23],[13.4,52.5],[6.76,51.43]]},
+  {name:'Hành lang Trung tâm (xuyên Caspi)', type:'rail', status:'normal',
+   note:'Tuyến né Nga: Trung Quốc – Kazakhstan – phà qua biển Caspi – Azerbaijan – Gruzia – Thổ Nhĩ Kỳ – châu Âu.',
+   path:[[108.94,34.34],[103.8,36.05],[87.6,43.8],[80.4,44.2],[76.9,43.25],[51.2,43.65],[49.87,40.4],[44.8,41.7],[43.1,40.6],[32.85,39.9],[28.98,41.0],[19.04,47.5],[16.37,48.2]]}
+];
+
+const SOURCES = [
+  ['Danh sách thành viên APEC — DFAT (Úc)','https://dfat.gov.au/trade/organisations/apec/asia-pacific-economic-cooperation-apec'],
+  ['166 thành viên WTO — Fibre2Fashion (3/2026)','https://www.fibre2fashion.com/news/textile-news/total-number-of-tfa-ratifications-stands-at-162-out-of-166-wto-members-308764-newsdetails.htm'],
+  ['BRICS 2026: 11 thành viên, 10 đối tác — Asian Mirror','https://www.asianmirror.us/?p=34925'],
+  ['13 cuộc chiến năm 2026 (UCDP) — Blackwing, cập nhật 18/11/2026','https://blackwing.im/blog/how-many-wars-are-there-in-the-world'],
+  ['Danh sách xung đột theo mức độ — WarMonit, 18/11/2026','https://warmonit.com/conflicts'],
+  ['Wikipedia — Current events, tháng 11/2026','https://en.wikipedia.org/wiki/Portal:Current_events/November_2026'],
+  ['Just Security — Early Edition 18/11/2026','https://justsecurity.org/165038/early-edition-november-18-2026'],
+  ['Khủng hoảng eo Hormuz 2026 — Wikipedia','https://en.wikipedia.org/wiki/2026_Strait_of_Hormuz_crisis'],
+  ['Iran Shipping Update 17–18/11/2026 — UANI','https://www.unitedagainstnucleariran.com/analysis/iran-shipping-update-november-18-2026'],
+  ['Hormuz, Biển Đỏ — Windward','https://insights.windward.ai/'],
+  ['Suez: công suất container vượt 1/2 mức trước khủng hoảng — Container News','https://container-news.com/suez-canal-container-ship-transits-exceed-half-of-pre-crisis-levels/'],
+  ['Suez: trở lại hoàn toàn dự kiến Q1/2027 — Seatrade Maritime','https://www.seatrade-maritime.com/containers/full-suez-return-for-container-carriers-expected-by-q1-2027'],
+  ['Panama nâng lên 34 lượt/ngày — AJOT','https://www.ajot.com/news/panama-canal-increases-daily-transits-to-34-and-raises-maximum-allowable-draft-at-neopanamax-locks'],
+  ['Panama năm tài khóa 2026 — Seatrade Maritime','https://www.seatrade-maritime.com/maritime-transportation/panama-canal-sees-4-growth-of-transits-in-fy2026'],
+  ['Dữ liệu bản đồ — world-atlas (Natural Earth)','https://github.com/topojson/world-atlas']
+];
+
+/* Tên tiếng Việt cho các nước hay gặp (phần còn lại dùng tên tiếng Anh). */
+const VN = {'704':'Việt Nam','840':'Mỹ','156':'Trung Quốc','392':'Nhật Bản','410':'Hàn Quốc','408':'Triều Tiên','356':'Ấn Độ','643':'Nga','036':'Úc','554':'New Zealand','076':'Brazil','826':'Anh','276':'Đức','250':'Pháp','380':'Ý','724':'Tây Ban Nha','682':'Ả Rập Xê Út','710':'Nam Phi','764':'Thái Lan','418':'Lào','116':'Campuchia','104':'Myanmar','158':'Đài Loan','344':'Hồng Kông','446':'Ma Cao','702':'Singapore','458':'Malaysia','360':'Indonesia','608':'Philippines','096':'Brunei','626':'Timor-Leste','818':'Ai Cập','784':'UAE','792':'Thổ Nhĩ Kỳ','032':'Argentina','124':'Canada','484':'Mexico','152':'Chile','604':'Peru','804':'Ukraine','364':'Iran','376':'Israel','275':'Palestine','422':'Liban','887':'Yemen','729':'Sudan','728':'Nam Sudan','706':'Somalia','231':'Ethiopia','586':'Pakistan','004':'Afghanistan','566':'Nigeria','180':'CHDC Congo','616':'Ba Lan','112':'Belarus','398':'Kazakhstan','860':'Uzbekistan','192':'Cuba','068':'Bolivia','800':'Uganda','854':'Burkina Faso','466':'Mali','562':'Niger','332':'Haiti','598':'Papua New Guinea','304':'Greenland'};
+
+/* ===================================================================== */
+const LEVEL = {critical:{c:'#A32D2D',r:11,t:'Rất nghiêm trọng'},high:{c:'#e34948',r:9,t:'Cao'},elevated:{c:'#eda100',r:7,t:'Đáng chú ý'},watch:{c:'#888780',r:6,t:'Theo dõi'}};
+const STATUS = {blocked:{c:'#A32D2D',t:'Bị phong tỏa / gián đoạn nặng'},high:{c:'#e34948',t:'Rủi ro cao'},moderate:{c:'#eda100',t:'Đang hồi phục / rủi ro vừa'},watch:{c:'#888780',t:'Cần theo dõi'},normal:{c:'#1baf7a',t:'Bình thường'},seasonal:{c:'#6250d6',t:'Theo mùa'}};
+
+const S = s => new Set((s||'').split(' ').filter(Boolean));
+for (const k in BLOCS){const b=BLOCS[k];b.m=b.members?S(b.members):null;b.no=b.notMembers?S(b.notMembers):null;b.p=S(b.partners);}
+function inBloc(k,id){ if(id===undefined) return 0; const b=BLOCS[k];
+  if(b.no) return b.no.has(id)?0:1; if(b.m.has(id)) return 1; if(b.p.has(id)) return 2; return 0; }
+const name = d => VN[d.id] || d.properties.name;
+
+document.getElementById('updated').textContent = 'Cập nhật: ' + UPDATED;
+const dark = matchMedia('(prefers-color-scheme: dark)').matches;
+const css = v => getComputedStyle(document.documentElement).getPropertyValue(v).trim();
+
+/* ---------- state ---------- */
+const layers = {blocs:true, conflicts:true, logistics:true};
+const onBlocs = new Set(['APEC']);
+let pacific = true;
+
+/* ---------- svg + projection ---------- */
+const svg = d3.select('#map');
+const defs = svg.append('defs');
+const root = svg.append('g');
+const gSphere = root.append('g'), gLand = root.append('g'), gBorder = root.append('g'),
+      gRoutes = root.append('g'), gConf = root.append('g'), gChoke = root.append('g'), gLbl = root.append('g');
+let W, H, projection, path, features = [], k = 1;
+
+function makeProjection(){
+  const r = svg.node().getBoundingClientRect(); W = r.width; H = r.height;
+  projection = d3.geoNaturalEarth1().rotate([pacific ? -150 : -10, 0]);
+  projection.fitExtent([[10,10],[W-10,H-10]], {type:'Sphere'});
+  path = d3.geoPath(projection);
+}
+
+/* ---------- zoom ---------- */
+const zoom = d3.zoom().scaleExtent([1, 60]).on('zoom', e => {
+  root.attr('transform', e.transform); k = e.transform.k; rescale();
+});
+svg.call(zoom).on('dblclick.zoom', null);
+d3.select('#zin').on('click', () => svg.transition().duration(300).call(zoom.scaleBy, 1.8));
+d3.select('#zout').on('click', () => svg.transition().duration(300).call(zoom.scaleBy, 1/1.8));
+d3.select('#zreset').on('click', () => svg.transition().duration(500).call(zoom.transform, d3.zoomIdentity));
+function flyTo(lonlat, scale){
+  const [x,y] = projection(lonlat); const s = scale || 4;
+  svg.transition().duration(750).call(zoom.transform, d3.zoomIdentity.translate(W/2 - s*x, H/2 - s*y).scale(s));
+}
+function flyToBounds(geo){
+  const [[x0,y0],[x1,y1]] = path.bounds(geo);
+  const s = Math.min(40, 0.85 / Math.max((x1-x0)/W, (y1-y0)/H));
+  svg.transition().duration(750).call(zoom.transform, d3.zoomIdentity.translate(W/2 - s*(x0+x1)/2, H/2 - s*(y0+y1)/2).scale(s));
+}
+
+/* ---------- tooltip ---------- */
+const tip = document.getElementById('tip');
+function showTip(ev, html){ const r = document.querySelector('main').getBoundingClientRect();
+  tip.innerHTML = html; tip.style.display='block';
+  let x = ev.clientX - r.left + 12, y = ev.clientY - r.top + 12;
+  if (x + 290 > r.width) x -= 300; tip.style.left = x+'px'; tip.style.top = y+'px'; }
+function hideTip(){ tip.style.display='none'; }
+
+/* ---------- stripes for overlapping blocs ---------- */
+const patterns = {};
+function pattern(parts){
+  const key = parts.map(p=>p.k+p.s).join('-'); if (patterns[key]) return patterns[key];
+  const id = 'pt'+Object.keys(patterns).length, w = 4, n = parts.length;
+  const p = defs.append('pattern').attr('id',id).attr('class','stripe').attr('patternUnits','userSpaceOnUse')
+     .attr('width',w*n).attr('height',w*n).attr('patternTransform',`rotate(45) scale(${1/k})`);
+  parts.forEach((q,i)=>p.append('rect').attr('x',i*w).attr('width',w).attr('height',w*n)
+     .attr('fill',BLOCS[q.k].color).attr('fill-opacity',q.s===2?0.4:1));
+  return patterns[key] = `url(#${id})`;
+}
+const conflictCountries = new Set(CONFLICTS.flatMap(c=>c.countries));
+function fillOf(d){
+  if (layers.blocs){
+    const parts = [...onBlocs].map(b=>({k:b,s:inBloc(b,d.id)})).filter(p=>p.s);
+    if (parts.length === 1) return parts[0].s===2 ? d3.color(BLOCS[parts[0].k].color).copy({opacity:.4})+'' : BLOCS[parts[0].k].color;
+    if (parts.length > 1) return pattern(parts);
+  }
+  if (layers.conflicts && conflictCountries.has(d.id) && !(layers.blocs && onBlocs.size)) return dark ? '#5a2424' : '#f3cccc';
+  return css('--land');
+}
+
+/* ---------- draw ---------- */
+function drawAll(){
+  makeProjection();
+  gSphere.selectAll('path').data([{type:'Sphere'}]).join('path').attr('d',path).attr('fill',css('--sea')).attr('stroke',css('--line2'));
+  gLand.selectAll('path').data(features).join('path').attr('d',path)
+    .attr('stroke',css('--landStroke')).style('cursor','pointer')
+    .on('mousemove',(e,d)=>showTip(e, `<b>${name(d)}</b>`+countryBlocLine(d)))
+    .on('mouseleave',hideTip)
+    .on('click',(e,d)=>showCountry(d));
+  gBorder.selectAll('path').data(features.filter(d=>conflictCountries.has(d.id))).join('path').attr('d',path)
+    .attr('fill','none').attr('stroke','#e34948').attr('stroke-opacity',.6).attr('stroke-dasharray','3 2').style('pointer-events','none');
+  drawRoutes(); drawConflicts(); drawChokes(); recolor(); rescale();
+}
+function recolor(){
+  gLand.selectAll('path').attr('fill',fillOf);
+  gBorder.style('display', layers.conflicts ? null : 'none');
+  gConf.style('display', layers.conflicts ? null : 'none');
+  gRoutes.style('display', layers.logistics ? null : 'none');
+  gChoke.style('display', layers.logistics ? null : 'none');
+  gLbl.style('display', layers.logistics ? null : 'none');
+  drawLegend();
+}
+function drawRoutes(){
+  const sel = gRoutes.selectAll('g.route').data(ROUTES).join(enter=>{
+    const g = enter.append('g').attr('class','route').style('cursor','pointer');
+    g.append('path').attr('class','hit').attr('fill','none').attr('stroke','transparent');
+    g.append('path').attr('class','ln').attr('fill','none').attr('stroke-linecap','round');
+    return g; });
+  sel.selectAll('path').attr('d', r => path({type:'LineString', coordinates:r.path}));
+  sel.select('.ln').attr('stroke', r=>STATUS[r.status].c).attr('opacity',.9);
+  sel.on('mousemove',(e,r)=>showTip(e,`<b>${r.name}</b><br>${STATUS[r.status].t}`)).on('mouseleave',hideTip)
+     .on('click',(e,r)=>{selectRoute(r);});
+}
+function drawConflicts(){
+  const sel = gConf.selectAll('g.cf').data(CONFLICTS).join(enter=>{
+    const g = enter.append('g').attr('class','cf').style('cursor','pointer');
+    g.append('circle').attr('class','halo pulse');
+    g.append('circle').attr('class','core');
+    return g; });
+  sel.attr('transform', c=>{const p=projection(c.at); return `translate(${p[0]},${p[1]})`;});
+  sel.select('.halo').attr('fill',c=>LEVEL[c.level].c);
+  sel.select('.core').attr('fill',c=>c.status==='ceasefire'?css('--panel'):LEVEL[c.level].c).attr('stroke',c=>LEVEL[c.level].c);
+  sel.on('mousemove',(e,c)=>showTip(e,`<b>${c.name}</b><br>${LEVEL[c.level].t}${c.status==='ceasefire'?' · ngừng bắn':''}`)).on('mouseleave',hideTip)
+     .on('click',(e,c)=>selectConflict(c));
+}
+function drawChokes(){
+  const sel = gChoke.selectAll('g.ck').data(CHOKEPOINTS).join(enter=>{
+    const g = enter.append('g').attr('class','ck').style('cursor','pointer');
+    g.append('rect'); return g; });
+  sel.attr('transform', c=>{const p=projection(c.at); return `translate(${p[0]},${p[1]})`;});
+  sel.select('rect').attr('fill',c=>STATUS[c.status].c);
+  sel.on('mousemove',(e,c)=>showTip(e,`<b>${c.name}</b><br>${STATUS[c.status].t}`)).on('mouseleave',hideTip)
+     .on('click',(e,c)=>selectChoke(c));
+  gLbl.selectAll('text').data(CHOKEPOINTS).join('text').attr('class','lbl').text(c=>c.name)
+     .attr('x',c=>projection(c.at)[0]).attr('y',c=>projection(c.at)[1]);
+}
+/* Giữ kích thước nét, chấm, chữ không đổi khi phóng to */
+function rescale(){
+  gLand.selectAll('path').attr('stroke-width', 0.5/k);
+  gBorder.selectAll('path').attr('stroke-width', 1.1/k).attr('stroke-dasharray', `${3/k} ${2/k}`);
+  gSphere.selectAll('path').attr('stroke-width', 1/k);
+  gRoutes.selectAll('.ln').attr('stroke-width', 2.2/k).attr('stroke-dasharray', function(){return d3.select(this.parentNode).datum().type==='rail' ? `${6/k} ${4/k}` : null;});
+  gRoutes.selectAll('.hit').attr('stroke-width', 10/k);
+  gConf.selectAll('g.cf').each(function(c){
+    const rr = LEVEL[c.level].r / k * Math.min(k, 1.6);
+    d3.select(this).select('.core').attr('r', rr*0.55).attr('stroke-width', 2/k);
+    d3.select(this).select('.halo').attr('r', rr*1.25); });
+  gChoke.selectAll('rect').attr('width',9/k).attr('height',9/k).attr('x',-4.5/k).attr('y',-4.5/k)
+     .attr('transform','rotate(45)').attr('stroke',css('--panel')).attr('stroke-width',1.5/k);
+  gLbl.selectAll('text').style('font-size', (11/k)+'px').attr('dx',8/k).attr('dy',3/k).style('stroke-width',(3/k)+'px')
+     .style('display', k >= 2.2 ? null : 'none');
+  defs.selectAll('pattern.stripe').attr('patternTransform', `rotate(45) scale(${1/k})`);
+}
+
+/* ---------- side panel ---------- */
+const detail = document.getElementById('detail');
+function setDetail(html){ detail.innerHTML = html; detail.style.display = html ? 'block' : 'none'; }
+function badge(c,t){ return `<span class="badge" style="background:${c}22;color:${c};border:1px solid ${c}55">${t}</span>`; }
+function countryBlocLine(d){
+  const l = Object.keys(BLOCS).map(b=>{const s=inBloc(b,d.id); return s===1?b : s===2?`${b} (${BLOCS[b].partnerLabel})`:null;}).filter(Boolean);
+  return l.length ? `<br><span style="color:var(--muted)">${l.join(' · ')}</span>` : '';
+}
+function showCountry(d){
+  const l = Object.keys(BLOCS).map(b=>{const s=inBloc(b,d.id); return s===1?b : s===2?`${b} (${BLOCS[b].partnerLabel})`:null;}).filter(Boolean);
+  const cf = CONFLICTS.filter(c=>c.countries.includes(d.id));
+  setDetail(`<b style="font-size:15px">${name(d)}</b><br>`+
+    (l.length?`Thuộc ${l.length} khối: ${l.join(', ')}`:'Không thuộc khối nào trong danh sách')+
+    (cf.length?`<br><br>Xung đột liên quan:<br>`+cf.map(c=>`• ${c.name}`).join('<br>'):''));
+}
+document.querySelectorAll('.tabs button').forEach(b=>b.onclick=()=>{
+  document.querySelectorAll('.tabs button').forEach(x=>x.classList.toggle('act',x===b));
+  document.querySelectorAll('.pane').forEach(p=>p.classList.toggle('act',p.id==='pane-'+b.dataset.tab));
+  if (layers[b.dataset.tab]===false){ layers[b.dataset.tab]=true; syncChips(); recolor(); }
+});
+document.querySelectorAll('.chip').forEach(c=>c.onclick=()=>{ layers[c.dataset.layer]=!layers[c.dataset.layer]; syncChips(); recolor(); });
+function syncChips(){ document.querySelectorAll('.chip').forEach(c=>c.classList.toggle('on',layers[c.dataset.layer])); }
+
+/* blocs list */
+const blocList = document.getElementById('blocList');
+Object.entries(BLOCS).forEach(([key,b])=>{
+  const el = document.createElement('label'); el.className='bloc';
+  el.innerHTML = `<input type="checkbox" ${onBlocs.has(key)?'checked':''}><span class="sw" style="background:${b.color}"></span>
+    <span><b>${key}</b> <span class="n">— ${b.full}</span><br><span class="n">${b.note}</span></span>`;
+  el.querySelector('input').onchange = e => { e.target.checked ? onBlocs.add(key) : onBlocs.delete(key); layers.blocs=true; syncChips(); recolor(); };
+  blocList.appendChild(el);
+});
+function setAllBlocs(v){ blocList.querySelectorAll('input').forEach((i,idx)=>{ i.checked=v; const key=Object.keys(BLOCS)[idx]; v?onBlocs.add(key):onBlocs.delete(key); }); recolor(); }
+document.getElementById('blocAll').onclick=()=>setAllBlocs(true);
+document.getElementById('blocNone').onclick=()=>setAllBlocs(false);
+
+/* conflicts list */
+const order = {critical:0,high:1,elevated:2,watch:3};
+const conflictList = document.getElementById('conflictList');
+[...CONFLICTS].sort((a,b)=>order[a.level]-order[b.level]).forEach(c=>{
+  const el = document.createElement('div'); el.className='item';
+  el.innerHTML = `<span class="dot" style="background:${LEVEL[c.level].c}"></span><div><div class="t">${c.name}</div>
+    <div class="s">${LEVEL[c.level].t}${c.status==='ceasefire'?' · ngừng bắn':''} · từ ${c.since}${c.killed?` · ${c.killed.toLocaleString('vi-VN')} người chết (2026)`:''}</div></div>`;
+  el.onclick = () => { selectConflict(c); mark(conflictList, el); };
+  c._el = el; conflictList.appendChild(el);
+});
+function selectConflict(c){
+  layers.conflicts = true; syncChips(); recolor();
+  setDetail(`<b style="font-size:15px">${c.name}</b> ${badge(LEVEL[c.level].c, LEVEL[c.level].t)}${c.status==='ceasefire'?badge('#888780','Ngừng bắn'):''}<br>
+    Bắt đầu: ${c.since}${c.killed?`<br>Người chết 2026 (tạm tính, tháng 1–9): <b>${c.killed.toLocaleString('vi-VN')}</b>`:''}<br><br>${c.note}`);
+  const geo = {type:'FeatureCollection', features: features.filter(f=>c.countries.includes(f.id))};
+  geo.features.length && c.countries.length <= 2 && !c.countries.includes('643') && !c.countries.includes('156') ? flyToBounds(geo) : flyTo(c.at, 5);
+  if (c._el) mark(conflictList, c._el);
+}
+
+/* logistics lists */
+const chokeList = document.getElementById('chokeList'), routeList = document.getElementById('routeList');
+const sorder = {blocked:0,high:1,moderate:2,watch:3,seasonal:4,normal:5};
+[...CHOKEPOINTS].sort((a,b)=>sorder[a.status]-sorder[b.status]).forEach(c=>{
+  const el = document.createElement('div'); el.className='item';
+  el.innerHTML = `<span class="dot" style="background:${STATUS[c.status].c};border-radius:2px;transform:rotate(45deg)"></span><div><div class="t">${c.name}</div><div class="s">${STATUS[c.status].t}</div></div>`;
+  el.onclick = () => { selectChoke(c); mark(chokeList, el); }; c._el = el; chokeList.appendChild(el);
+});
+[...ROUTES].sort((a,b)=>sorder[a.status]-sorder[b.status]).forEach(r=>{
+  const el = document.createElement('div'); el.className='item';
+  el.innerHTML = `<span class="dot" style="background:${STATUS[r.status].c};border-radius:2px;height:4px;margin-top:8px;width:14px"></span><div><div class="t">${r.name}</div><div class="s">${r.type==='rail'?'Đường sắt':'Đường biển'} · ${STATUS[r.status].t}</div></div>`;
+  el.onclick = () => { selectRoute(r); mark(routeList, el); }; r._el = el; routeList.appendChild(el);
+});
+function selectChoke(c){ layers.logistics = true; syncChips(); recolor();
+  setDetail(`<b style="font-size:15px">${c.name}</b> ${badge(STATUS[c.status].c, STATUS[c.status].t)}<br><br>${c.note}`);
+  flyTo(c.at, 7); if (c._el) mark(chokeList, c._el); }
+function selectRoute(r){ layers.logistics = true; syncChips(); recolor();
+  setDetail(`<b style="font-size:15px">${r.name}</b> ${badge(STATUS[r.status].c, STATUS[r.status].t)}<br>${r.type==='rail'?'Đường sắt':'Đường biển'} · tuyến minh họa<br><br>${r.note}`);
+  gRoutes.selectAll('g.route').select('.ln').attr('opacity', x => x===r ? 1 : .25);
+  setTimeout(()=>gRoutes.selectAll('.ln').transition().duration(600).attr('opacity',.9), 3500);
+  flyToBounds({type:'LineString', coordinates:r.path}); if (r._el) mark(routeList, r._el); }
+function mark(list, el){ document.querySelectorAll('.item.sel').forEach(x=>x.classList.remove('sel')); el.classList.add('sel'); }
+
+/* sources */
+document.getElementById('sourceList').innerHTML = `<p>Dữ liệu cập nhật ngày <b>${UPDATED}</b>. Tình hình xung đột và tuyến vận tải thay đổi liên tục, hãy đối chiếu nguồn mới nhất.</p>` +
+  SOURCES.map(s=>`<div style="margin:6px 0"><a href="${s[1]}" target="_blank" rel="noopener" style="color:var(--accent)">${s[0]}</a></div>`).join('') +
+  `<p style="margin-top:12px">Đường biên giới theo Natural Earth, mang tính minh họa, không thể hiện quan điểm về chủ quyền lãnh thổ.</p>`;
+
+/* legend */
+function drawLegend(){
+  const sw = (c,t,shape) => `<span class="k"><span style="width:10px;height:${shape==='line'?3:10}px;background:${c};border-radius:${shape==='dot'?'50%':shape==='dia'?'1px;transform:rotate(45deg)':'2px'}"></span>${t}</span>`;
+  let h = '';
+  if (layers.blocs && onBlocs.size) h += `<div class="row">${[...onBlocs].map(b=>sw(BLOCS[b].color,b)).join('')}</div>`;
+  if (layers.conflicts) h += `<div class="row" style="margin-top:4px">${['critical','high','elevated','watch'].map(l=>sw(LEVEL[l].c,LEVEL[l].t,'dot')).join('')}<span class="k"><span style="width:10px;height:10px;border-radius:50%;border:2px solid #e34948;box-sizing:border-box"></span>Ngừng bắn</span></div>`;
+  if (layers.logistics) h += `<div class="row" style="margin-top:4px">${['blocked','high','moderate','normal','seasonal'].map(s=>sw(STATUS[s].c,STATUS[s].t,'line')).join('')}<span class="k">◆ điểm nghẽn · - - đường sắt</span></div>`;
+  const lg = document.getElementById('legend'); lg.innerHTML = h; lg.style.display = h ? 'block' : 'none';
+}
+
+/* center toggle */
+const centerBtn = document.getElementById('center');
+centerBtn.onclick = () => { pacific = !pacific; centerBtn.textContent = 'Tâm: ' + (pacific ? 'Thái Bình Dương' : 'châu Âu – châu Phi');
+  svg.call(zoom.transform, d3.zoomIdentity); drawAll(); };
+window.addEventListener('resize', () => { drawAll(); });
+
+/* ---------- load map ---------- */
+const URLS = ['https://cdn.jsdelivr.net/npm/world-atlas@2/countries-50m.json','https://cdn.jsdelivr.net/npm/world-atlas@2/countries-110m.json'];
+(async function load(){
+  for (const u of URLS){
+    try { const w = await d3.json(u); features = topojson.feature(w, w.objects.countries).features.filter(d=>d.id!=='010'); break; }
+    catch(e){ console.warn('Không tải được', u, e); }
+  }
+  drawAll();
+})();
+</script>
+</body>
+</html>
