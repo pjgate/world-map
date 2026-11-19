@@ -94,6 +94,11 @@ main{position:relative;overflow:hidden;background:var(--sea)}
     <div id="detail"></div>
     <div class="pane act" id="pane-blocs">
       <div class="small">Tick nhiều khối để chồng lên nhau. Nước thuộc nhiều khối đang bật sẽ có sọc nhiều màu. Màu nhạt = đối tác BRICS hoặc thuộc G20 qua EU. Bấm vào một nước trên bản đồ để xem nước đó thuộc khối nào.</div>
+      <div class="crit" style="border-style:solid">
+        <label style="display:flex;gap:6px;align-items:center;cursor:pointer"><input type="checkbox" id="gdpOn" checked> <b>Cột GDP · Xuất · Nhập khẩu</b></label>
+        <label style="display:flex;gap:6px;align-items:center;cursor:pointer;margin-top:4px"><input type="checkbox" id="gdpSqrt"> Thang căn bậc hai (dễ nhìn nước nhỏ)</label>
+        <div style="margin-top:6px">50 nền kinh tế lớn nhất. Cột rộng mờ = GDP; hai cột nhỏ bên trong: <span style="color:#1baf7a">■ Xuất</span> <span style="color:#eb6834">■ Nhập</span>. Cùng một thang USD, nên so được độ giàu và độ mở thương mại.</div>
+      </div>
       <div style="display:flex;gap:6px;margin:10px 0 4px"><button id="blocAll">Chọn hết</button><button id="blocNone">Bỏ chọn hết</button></div>
       <div id="blocList"></div>
     </div>
@@ -277,6 +282,43 @@ const ROUTES = [
    path:[[108.94,34.34],[103.8,36.05],[87.6,43.8],[80.4,44.2],[76.9,43.25],[51.2,43.65],[49.87,40.4],[44.8,41.7],[43.1,40.6],[32.85,39.9],[28.98,41.0],[19.04,47.5],[16.37,48.2]]}
 ];
 
+
+/* ---------------------------------------------------------------------
+   GDP & XUẤT – NHẬP KHẨU (triệu USD) cho 50 nền kinh tế lớn nhất.
+   GDP: IMF World Economic Outlook, ước tính 2026.
+   Xuất/nhập khẩu hàng hóa + dịch vụ: World Bank (xuất khẩu chủ yếu năm 2025;
+   nhập khẩu theo số mới nhất của World Bank; Đài Loan, Nigeria theo CIA).
+   at = điểm đặt cột [kinh độ, vĩ độ]. null = chưa có số liệu.
+   --------------------------------------------------------------------- */
+const ECON = [
+ ['840',[-98,39],32642373,3429815,4083292],['156',[104,34],21546403,4136835,3219343],
+ ['276',[10.4,51],5471299,2047926,1782162],['392',[138.5,36.5],4341986,971285,981638],
+ ['826',[-1.8,52.8],4268446,1225513,1157638],['356',[79,22],4060207,863100,919206],
+ ['250',[2.4,46.6],3554155,1136323,1157661],['643',[60,58],2861156,465788,382412],
+ ['380',[12.5,42.8],2701737,823816,722349],['076',[-51,-10],2654761,404920,381758],
+ ['124',[-100,56],2490256,726630,733286],['410',[127.8,36.3],2245847,869086,752670],
+ ['484',[-102,23.5],2176236,730829,702661],['036',[134,-25],2110657,429327,396154],
+ ['724',[-3.7,40.2],2085276,699338,568717],['792',[35,39],1817987,393277,367557],
+ ['360',[113,-1.5],1479954,323015,284696],['528',[5.5,52.2],1423856,1079499,884311],
+ ['682',[45,24],1343346,380370,317307],['756',[8.2,46.8],1135739,817414,580072],
+ ['616',[19.4,52],1133088,521445,441992],['158',[121,23.7],1019696,664506,351441],
+ ['056',[4.5,50.6],772699,550008,526554],['032',[-64,-34],768206,105492,81218],
+ ['376',[35,31.4],746982,173988,140592],['752',[15,62],745081,366211,306338],
+ ['372',[-8,53.2],709972,961839,608488],['702',[103.8,1.35],667889,1073991,786021],
+ ['784',[54.3,24],661018,752450,481852],['578',[9,61],651712,241037,162845],
+ ['040',[14.5,47.5],616896,319409,279663],['764',[101,15],599115,411510,351174],
+ ['170',[-73,4],572735,68866,87542],['458',[102,4],547100,341991,278551],
+ ['704',[105.8,16.5],542130,505366,339930],['050',[90.3,23.7],506357,53848,73445],
+ ['608',[122,12],501692,114933,185164],['208',[9.5,56],499354,326884,253019],
+ ['710',[25,-29],489083,134488,119489],['642',[25,46],470091,152427,159597],
+ ['344',[114.17,22.32],455156,853825,723319],['586',[69.5,30],450130,null,63703],
+ ['818',[30,27],442886,63713,90357],['203',[15.5,49.8],427953,262493,216255],
+ ['152',[-71,-33],402243,123375,99531],['604',[-75,-9.5],399593,83324,66343],
+ ['398',[67,48],397921,91908,71882],['566',[8,9.5],386671,57536,57730],
+ ['620',[-8,39.6],375197,152159,137862],['246',[26,63],338564,136479,122652]
+].map(([id,at,gdp,ex,im])=>({id,at,gdp,ex,im}));
+const ECON_BY = Object.fromEntries(ECON.map(e=>[e.id,e]));
+
 /* ---------------------------------------------------------------------
    TIN NỔI BẬT. Mỗi tin: date (yyyy-mm-dd), cat, score 1–5, at [kinh độ, vĩ độ],
    countries (tuỳ chọn, mã ISO số), note, src (URL).
@@ -355,6 +397,9 @@ const SOURCES = [
   ['Suez: trở lại hoàn toàn dự kiến Q1/2027 — Seatrade Maritime','https://www.seatrade-maritime.com/containers/full-suez-return-for-container-carriers-expected-by-q1-2027'],
   ['Panama nâng lên 34 lượt/ngày — AJOT','https://www.ajot.com/news/panama-canal-increases-daily-transits-to-34-and-raises-maximum-allowable-draft-at-neopanamax-locks'],
   ['Panama năm tài khóa 2026 — Seatrade Maritime','https://www.seatrade-maritime.com/maritime-transportation/panama-canal-sees-4-growth-of-transits-in-fy2026'],
+  ['GDP 2026 (IMF WEO) — Wikipedia: List of countries by GDP (nominal)','https://en.wikipedia.org/wiki/List_of_countries_by_GDP_(nominal)'],
+  ['Xuất khẩu hàng hóa + dịch vụ (World Bank) — Wikipedia','https://en.wikipedia.org/wiki/List_of_countries_by_exports'],
+  ['Nhập khẩu (World Bank / CIA) — Wikipedia','https://en.wikipedia.org/wiki/List_of_countries_by_imports'],
   ['Dữ liệu bản đồ — world-atlas (Natural Earth)','https://github.com/topojson/world-atlas']
 ];
 
@@ -391,7 +436,7 @@ let pacific = true;
 const svg = d3.select('#map');
 const defs = svg.append('defs');
 const root = svg.append('g');
-const gSphere = root.append('g'), gLand = root.append('g'), gBorder = root.append('g'),
+const gSphere = root.append('g'), gLand = root.append('g'), gBorder = root.append('g'), gGdp = root.append('g'),
       gRoutes = root.append('g'), gConf = root.append('g'), gChoke = root.append('g'), gNews = root.append('g'), gLbl = root.append('g');
 let W, H, projection, path, features = [], k = 1;
 
@@ -461,7 +506,7 @@ function drawAll(){
     .on('click',(e,d)=>showCountry(d));
   gBorder.selectAll('path').data(features.filter(d=>conflictCountries.has(d.id))).join('path').attr('d',path)
     .attr('fill','none').attr('stroke','#e34948').attr('stroke-opacity',.6).attr('stroke-dasharray','3 2').style('pointer-events','none');
-  drawRoutes(); drawConflicts(); drawChokes(); drawNews(); recolor(); rescale();
+  drawGdp(); drawRoutes(); drawConflicts(); drawChokes(); drawNews(); recolor(); rescale();
 }
 function recolor(){
   gLand.selectAll('path').attr('fill',fillOf);
@@ -471,6 +516,7 @@ function recolor(){
   gChoke.style('display', layers.logistics ? null : 'none');
   gLbl.style('display', layers.logistics ? null : 'none');
   gNews.style('display', layers.news ? null : 'none');
+  gGdp.style('display', layers.blocs && gdpOn.checked ? null : 'none');
   drawLegend();
 }
 /* Tuyến đường mềm: chia nhỏ theo cung tròn lớn, chiếu lên bản đồ rồi làm cong
@@ -541,8 +587,42 @@ function drawNews(){
   sel.on('mousemove',(e,n)=>showTip(e,`<b>${n.title}</b><br>${CATS[n.cat].t} · ${fmtDate(n.date)}${isNew(n.date)?' · MỚI':''}`)).on('mouseleave',hideTip)
      .on('click',(e,n)=>selectNews(n));
 }
+/* ---------- cột GDP / xuất / nhập ---------- */
+const gdpOn = document.getElementById('gdpOn'), gdpSqrt = document.getElementById('gdpSqrt');
+const GDP_MAX = d3.max(ECON, e=>e.gdp), BAR_H = 120;
+const fmtUSD = m => m == null ? 'chưa có số liệu' : m >= 1e6 ? (m/1e6).toLocaleString('vi-VN',{maximumFractionDigits:2})+' nghìn tỷ USD' : Math.round(m/1e3).toLocaleString('vi-VN')+' tỷ USD';
+const barH = v => v == null ? 0 : (gdpSqrt.checked ? Math.sqrt(v/GDP_MAX) : v/GDP_MAX) * BAR_H;
+function econHtml(e, nm){
+  const bal = e.ex!=null && e.im!=null ? e.ex - e.im : null;
+  return `<b>${nm}</b><br>GDP: <b>${fmtUSD(e.gdp)}</b><br><span style="color:#1baf7a">■</span> Xuất khẩu: ${fmtUSD(e.ex)}<br><span style="color:#eb6834">■</span> Nhập khẩu: ${fmtUSD(e.im)}`+
+    (bal!=null?`<br>Cán cân: ${bal>=0?'thặng dư':'thâm hụt'} ${fmtUSD(Math.abs(bal))}<br>Xuất khẩu / GDP: ${Math.round(e.ex/e.gdp*100)}%`:'');
+}
+function drawGdp(){
+  const sel = gGdp.selectAll('g.ec').data(ECON).join(enter=>{
+    const g = enter.append('g').attr('class','ec').style('cursor','pointer');
+    g.append('rect').attr('class','gdp'); g.append('rect').attr('class','ex').attr('fill','#1baf7a'); g.append('rect').attr('class','im').attr('fill','#eb6834');
+    return g; });
+  sel.attr('transform', e=>{const p=projection(e.at); return `translate(${p[0]},${p[1]})`;});
+  sel.select('.gdp').attr('fill', dark ? 'rgba(240,239,236,.28)' : 'rgba(27,27,26,.18)').attr('stroke', dark ? 'rgba(240,239,236,.6)' : 'rgba(27,27,26,.45)');
+  sel.on('mousemove',(e,d)=>showTip(e, econHtml(d, VN[d.id] || (features.find(f=>f.id===d.id)||{properties:{name:d.id}}).properties.name)))
+     .on('mouseleave',hideTip)
+     .on('click',(e,d)=>{ const f = features.find(x=>x.id===d.id); if (f) showCountry(f); });
+}
+function sizeGdp(){
+  gGdp.selectAll('g.ec').each(function(e){
+    const g = d3.select(this), W1 = 14/k, w = 5/k, hg = barH(e.gdp)/k, he = barH(e.ex)/k, hi = barH(e.im)/k;
+    g.select('.gdp').attr('x',-W1/2).attr('y',-hg).attr('width',W1).attr('height',hg).attr('stroke-width',0.8/k);
+    g.select('.ex').attr('x',-w-0.5/k).attr('y',-he).attr('width',w).attr('height',he);
+    g.select('.im').attr('x',0.5/k).attr('y',-hi).attr('width',w).attr('height',hi);
+  });
+  gGdp.selectAll('g.ec').sort((a,b)=>projection(a.at)[1]-projection(b.at)[1]);
+}
+gdpOn.onchange = () => { layers.blocs = true; syncChips(); recolor(); };
+gdpSqrt.onchange = () => sizeGdp();
+
 /* Giữ kích thước nét, chấm, chữ không đổi khi phóng to */
 function rescale(){
+  sizeGdp();
   gLand.selectAll('path').attr('stroke-width', 0.5/k);
   gBorder.selectAll('path').attr('stroke-width', 1.1/k).attr('stroke-dasharray', `${3/k} ${2/k}`);
   gSphere.selectAll('path').attr('stroke-width', 1/k);
@@ -579,6 +659,7 @@ function showCountry(d){
   const cf = CONFLICTS.filter(c=>c.countries.includes(d.id));
   setDetail(`<b style="font-size:15px">${name(d)}</b><br>`+
     (l.length?`Thuộc ${l.length} khối: ${l.join(', ')}`:'Không thuộc khối nào trong danh sách')+
+    (ECON_BY[d.id]?'<br><br>'+econHtml(ECON_BY[d.id],'Kinh tế').replace('<b>Kinh tế</b><br>',''):'')+
     (cf.length?`<br><br>Xung đột liên quan:<br>`+cf.map(c=>`• ${c.name}`).join('<br>'):''));
 }
 document.querySelectorAll('.tabs button').forEach(b=>b.onclick=()=>{
@@ -670,6 +751,7 @@ function drawLegend(){
   const sw = (c,t,shape) => `<span class="k"><span style="width:10px;height:${shape==='line'?3:10}px;background:${c};border-radius:${shape==='dot'?'50%':shape==='dia'?'1px;transform:rotate(45deg)':'2px'}"></span>${t}</span>`;
   let h = '';
   if (layers.blocs && onBlocs.size) h += `<div class="row">${[...onBlocs].map(b=>sw(BLOCS[b].color,b)).join('')}</div>`;
+  if (layers.blocs && gdpOn.checked) h += `<div class="row" style="margin-top:4px">${sw(dark?'rgba(240,239,236,.45)':'rgba(27,27,26,.3)','GDP')}${sw('#1baf7a','Xuất khẩu')}${sw('#eb6834','Nhập khẩu')}<span class="k">cột cao nhất = Mỹ, GDP ${fmtUSD(GDP_MAX)}</span></div>`;
   if (layers.conflicts) h += `<div class="row" style="margin-top:4px">${['critical','high','elevated','watch'].map(l=>sw(LEVEL[l].c,LEVEL[l].t,'dot')).join('')}<span class="k"><span style="width:10px;height:10px;border-radius:50%;border:2px solid #e34948;box-sizing:border-box"></span>Ngừng bắn</span></div>`;
   if (layers.logistics) h += `<div class="row" style="margin-top:4px">${['blocked','high','moderate','normal','seasonal'].map(s=>sw(STATUS[s].c,STATUS[s].t,'line')).join('')}<span class="k">◆ điểm nghẽn · - - đường sắt</span></div>`;
   if (layers.news) h += `<div class="row" style="margin-top:4px">${Object.values(CATS).map(c=>sw(c.c,c.t)).join('')}<span class="k"><span style="width:10px;height:10px;border-radius:50%;border:2px solid #fab219;box-sizing:border-box"></span>Mới trong 7 ngày</span></div>`;
