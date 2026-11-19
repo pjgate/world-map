@@ -71,7 +71,7 @@ main{position:relative;overflow:hidden;background:var(--sea)}
 <body>
 <div class="app">
   <header>
-    <h1>Bản đồ địa chính trị</h1>
+    <h1>Bản đồ địa chính trị <button id="ver" title="Lịch sử phiên bản" style="font-size:11px;padding:1px 7px;margin-left:4px;vertical-align:2px"></button></h1>
     <button class="chip on" data-layer="blocs"><span class="sw" style="background:#2a78d6"></span>Khối thương mại</button>
     <button class="chip on" data-layer="conflicts"><span class="sw" style="background:#e34948"></span>Xung đột</button>
     <button class="chip on" data-layer="logistics"><span class="sw" style="background:#1baf7a"></span>Logistics</button>
@@ -89,7 +89,7 @@ main{position:relative;overflow:hidden;background:var(--sea)}
       <button data-tab="blocs" class="act">Khối</button>
       <button data-tab="conflicts">Xung đột</button>
       <button data-tab="logistics">Logistics</button>
-      <button data-tab="sources">Nguồn</button>
+      <button data-tab="sources">Thông tin</button>
     </div>
     <div id="detail"></div>
     <div class="pane act" id="pane-blocs">
@@ -150,7 +150,16 @@ main{position:relative;overflow:hidden;background:var(--sea)}
    DỮ LIỆU — sửa ở đây khi cần cập nhật. Mã nước = mã số ISO 3166-1
    (ví dụ Việt Nam = "704"), trùng với id trong world-atlas.
    ===================================================================== */
+const VERSION = '1.3.1';
 const UPDATED = '19/11/2026';
+/* Ghi chú phiên bản (mới nhất ở trên) — đồng bộ với CHANGELOG.md */
+const CHANGELOG = [
+  ['1.3.1','19/11/2026','Hiện số phiên bản trên app, thêm lịch sử phiên bản.'],
+  ['1.3.0','19/11/2026','Cột GDP, xuất khẩu, nhập khẩu cho 50 nền kinh tế lớn nhất.'],
+  ['1.2.0','19/11/2026','Tuyến logistics cong mềm, chấm chạy theo chiều; nền tối mặc định.'],
+  ['1.1.0','19/11/2026','Lớp Tin nổi bật, bộ lọc tin 5 điểm, nhãn MỚI.'],
+  ['1.0.0','19/11/2026','Phiên bản đầu: khối thương mại, xung đột, logistics.']
+];
 
 const EU27 = '040 056 100 191 196 203 208 233 246 250 276 300 348 372 380 428 440 442 470 528 616 620 642 703 705 724 752';
 
@@ -420,7 +429,9 @@ const isNew = iso => { if (!iso) return false; const t = new Date(iso+'T00:00:00
 const NEWB = '<span class="newb">MỚI</span>';
 const fmtDate = iso => iso.split('-').reverse().join('/');
 
-document.getElementById('updated').textContent = 'Cập nhật: ' + UPDATED;
+document.getElementById('updated').textContent = 'Dữ liệu: ' + UPDATED;
+document.getElementById('ver').textContent = 'v' + VERSION;
+document.getElementById('ver').onclick = () => document.querySelector('.tabs button[data-tab=sources]').click();
 const dark = document.documentElement.dataset.theme === 'dark';
 const themeBtn = document.getElementById('theme');
 themeBtn.textContent = dark ? '☀ Nền sáng' : '☾ Nền tối';
@@ -742,7 +753,10 @@ nc.innerHTML = `<span class="newb" style="margin:0 4px 0 0">MỚI</span>${nNew} 
 nc.onclick = () => document.querySelector('.tabs button[data-tab=news]').click();
 
 /* sources */
-document.getElementById('sourceList').innerHTML = `<p>Dữ liệu cập nhật ngày <b>${UPDATED}</b>. Tình hình xung đột và tuyến vận tải thay đổi liên tục, hãy đối chiếu nguồn mới nhất.</p>` +
+document.getElementById('sourceList').innerHTML = `<h3 style="margin-top:0">Phiên bản</h3>` +
+  CHANGELOG.map(([v,d,t])=>`<div style="margin:5px 0"><b style="color:var(--ink)">v${v}</b> · ${d}<br>${t}</div>`).join('') +
+  `<p><a href="https://github.com/pjgate/world-map/blob/main/CHANGELOG.md" target="_blank" rel="noopener" style="color:var(--accent)">Xem CHANGELOG đầy đủ ↗</a></p><h3>Nguồn</h3>` +
+  `<p>Dữ liệu cập nhật ngày <b>${UPDATED}</b>. Tình hình xung đột và tuyến vận tải thay đổi liên tục, hãy đối chiếu nguồn mới nhất.</p>` +
   SOURCES.map(s=>`<div style="margin:6px 0"><a href="${s[1]}" target="_blank" rel="noopener" style="color:var(--accent)">${s[0]}</a></div>`).join('') +
   `<p style="margin-top:12px">Đường biên giới theo Natural Earth, mang tính minh họa, không thể hiện quan điểm về chủ quyền lãnh thổ.</p>`;
 
