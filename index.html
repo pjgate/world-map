@@ -2,6 +2,7 @@
 <html lang="vi">
 <head>
 <meta charset="utf-8">
+<script>try{document.documentElement.dataset.theme=localStorage.getItem('wm-theme')||'dark'}catch(e){document.documentElement.dataset.theme='dark'}</script>
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Bản đồ địa chính trị — khối thương mại, xung đột, logistics</title>
 <style>
@@ -9,10 +10,8 @@
   --bg:#f7f6f2;--panel:#ffffff;--ink:#1b1b1a;--ink2:#55544f;--muted:#8a8882;--line:rgba(0,0,0,.10);--line2:rgba(0,0,0,.18);
   --land:#dcdad2;--landStroke:#f7f6f2;--sea:#eef2f5;--accent:#2a78d6;--accentBg:#e6f1fb;--hover:#f1efe8;
 }
-@media (prefers-color-scheme: dark){
-  :root{--bg:#151515;--panel:#1d1d1c;--ink:#f0efec;--ink2:#c3c2b7;--muted:#898781;--line:rgba(255,255,255,.10);--line2:rgba(255,255,255,.2);
-  --land:#3a3a37;--landStroke:#151515;--sea:#1a1f24;--accent:#3987e5;--accentBg:#0c2a4a;--hover:#2a2a28;}
-}
+  :root[data-theme="dark"]{--bg:#151515;--panel:#1d1d1c;--ink:#f0efec;--ink2:#c3c2b7;--muted:#898781;--line:rgba(255,255,255,.10);--line2:rgba(255,255,255,.2);
+  --land:#3a3a37;--landStroke:#151515;--sea:#1a1d21;--accent:#3987e5;--accentBg:#0c2a4a;--hover:#2a2a28;}
 *{box-sizing:border-box}
 html,body{margin:0;height:100%;background:var(--bg);color:var(--ink);font:14px/1.5 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif}
 button{font:inherit;color:inherit;background:var(--panel);border:1px solid var(--line2);border-radius:8px;padding:5px 10px;cursor:pointer}
@@ -79,6 +78,7 @@ main{position:relative;overflow:hidden;background:var(--sea)}
     <button class="chip on" data-layer="news"><span class="sw" style="background:#fab219"></span>Tin nổi bật</button>
     <button id="newCount" style="border-color:#fab219"></button>
     <span class="spacer"></span>
+    <button id="theme" title="Đổi nền sáng / tối"></button>
     <button id="center" title="Đổi tâm bản đồ">Tâm: Thái Bình Dương</button>
     <span class="small" id="updated"></span>
   </header>
@@ -376,7 +376,10 @@ const NEWB = '<span class="newb">MỚI</span>';
 const fmtDate = iso => iso.split('-').reverse().join('/');
 
 document.getElementById('updated').textContent = 'Cập nhật: ' + UPDATED;
-const dark = matchMedia('(prefers-color-scheme: dark)').matches;
+const dark = document.documentElement.dataset.theme === 'dark';
+const themeBtn = document.getElementById('theme');
+themeBtn.textContent = dark ? '☀ Nền sáng' : '☾ Nền tối';
+themeBtn.onclick = () => { try{ localStorage.setItem('wm-theme', dark ? 'light' : 'dark'); }catch(e){} document.documentElement.dataset.theme = dark ? 'light' : 'dark'; location.reload(); };
 const css = v => getComputedStyle(document.documentElement).getPropertyValue(v).trim();
 
 /* ---------- state ---------- */
@@ -470,14 +473,32 @@ function recolor(){
   gNews.style('display', layers.news ? null : 'none');
   drawLegend();
 }
+/* Tuyến đường mềm: chia nhỏ theo cung tròn lớn, chiếu lên bản đồ rồi làm cong
+   bằng Catmull-Rom; tách đoạn khi vắt qua mép bản đồ. */
+const curve = d3.line().curve(d3.curveCatmullRom.alpha(0.5));
+function routeD(r){
+  const pts = [];
+  for (let i = 0; i < r.path.length - 1; i++){
+    const a = r.path[i], b = r.path[i+1], n = Math.max(1, Math.ceil(d3.geoDistance(a,b) / (8*Math.PI/180)));
+    const f = d3.geoInterpolate(a,b); for (let j = 0; j < n; j++) pts.push(f(j/n));
+  }
+  pts.push(r.path[r.path.length-1]);
+  const segs = [[]]; let prev = null;
+  pts.map(projection).forEach(p => { if (prev && Math.abs(p[0]-prev[0]) > W/3) segs.push([]); segs[segs.length-1].push(p); prev = p; });
+  return segs.filter(s => s.length > 1).map(curve).join('');
+}
 function drawRoutes(){
   const sel = gRoutes.selectAll('g.route').data(ROUTES).join(enter=>{
     const g = enter.append('g').attr('class','route').style('cursor','pointer');
     g.append('path').attr('class','hit').attr('fill','none').attr('stroke','transparent');
-    g.append('path').attr('class','ln').attr('fill','none').attr('stroke-linecap','round');
+    g.append('path').attr('class','case').attr('fill','none').attr('stroke-linecap','round').attr('stroke-linejoin','round');
+    g.append('path').attr('class','ln').attr('fill','none').attr('stroke-linecap','round').attr('stroke-linejoin','round');
+    g.append('path').attr('class','flow').attr('fill','none').attr('stroke-linecap','round');
     return g; });
-  sel.selectAll('path').attr('d', r => path({type:'LineString', coordinates:r.path}));
-  sel.select('.ln').attr('stroke', r=>STATUS[r.status].c).attr('opacity',.9);
+  sel.selectAll('path').attr('d', routeD);
+  sel.select('.case').attr('stroke', css('--sea')).attr('opacity',.85);
+  sel.select('.ln').attr('stroke', r=>STATUS[r.status].c);
+  sel.select('.flow').attr('stroke', dark ? 'rgba(255,255,255,.85)' : 'rgba(255,255,255,.95)');
   sel.on('mousemove',(e,r)=>showTip(e,`<b>${r.name}</b><br>${STATUS[r.status].t}`)).on('mouseleave',hideTip)
      .on('click',(e,r)=>{selectRoute(r);});
 }
@@ -525,8 +546,10 @@ function rescale(){
   gLand.selectAll('path').attr('stroke-width', 0.5/k);
   gBorder.selectAll('path').attr('stroke-width', 1.1/k).attr('stroke-dasharray', `${3/k} ${2/k}`);
   gSphere.selectAll('path').attr('stroke-width', 1/k);
-  gRoutes.selectAll('.ln').attr('stroke-width', 2.2/k).attr('stroke-dasharray', function(){return d3.select(this.parentNode).datum().type==='rail' ? `${6/k} ${4/k}` : null;});
-  gRoutes.selectAll('.hit').attr('stroke-width', 10/k);
+  gRoutes.selectAll('.case').attr('stroke-width', 5/k);
+  gRoutes.selectAll('.ln').attr('stroke-width', 2.4/k).attr('stroke-dasharray', function(){return d3.select(this.parentNode).datum().type==='rail' ? `${7/k} ${4/k}` : null;});
+  gRoutes.selectAll('.flow').attr('stroke-width', 2/k).attr('stroke-dasharray', `${0.1/k} ${32/k}`).style('display', function(){return d3.select(this.parentNode).datum().type==='rail' ? 'none' : null;});
+  gRoutes.selectAll('.hit').attr('stroke-width', 12/k);
   gConf.selectAll('g.cf').each(function(c){
     const rr = LEVEL[c.level].r / k * Math.min(k, 1.6);
     d3.select(this).select('.core').attr('r', rr*0.55).attr('stroke-width', 2/k);
@@ -546,7 +569,7 @@ function rescale(){
 /* ---------- side panel ---------- */
 const detail = document.getElementById('detail');
 function setDetail(html){ detail.innerHTML = html; detail.style.display = html ? 'block' : 'none'; }
-function badge(c,t){ return `<span class="badge" style="background:${c}22;color:${c};border:1px solid ${c}55">${t}</span>`; }
+function badge(c,t){ const tc = dark ? d3.color(c).brighter(1.2).formatHex() : c; return `<span class="badge" style="background:${c}33;color:${tc};border:1px solid ${c}88">${t}</span>`; }
 function countryBlocLine(d){
   const l = Object.keys(BLOCS).map(b=>{const s=inBloc(b,d.id); return s===1?b : s===2?`${b} (${BLOCS[b].partnerLabel})`:null;}).filter(Boolean);
   return l.length ? `<br><span style="color:var(--muted)">${l.join(' · ')}</span>` : '';
@@ -616,8 +639,8 @@ function selectChoke(c){ layers.logistics = true; syncChips(); recolor();
   flyTo(c.at, 7); if (c._el) mark(chokeList, c._el); }
 function selectRoute(r){ layers.logistics = true; syncChips(); recolor();
   setDetail(`<b style="font-size:15px">${r.name}</b> ${badge(STATUS[r.status].c, STATUS[r.status].t)}<br>${r.type==='rail'?'Đường sắt':'Đường biển'} · tuyến minh họa<br><br>${r.note}`);
-  gRoutes.selectAll('g.route').select('.ln').attr('opacity', x => x===r ? 1 : .25);
-  setTimeout(()=>gRoutes.selectAll('.ln').transition().duration(600).attr('opacity',.9), 3500);
+  gRoutes.selectAll('g.route').attr('opacity', x => x===r ? 1 : .2);
+  setTimeout(()=>gRoutes.selectAll('g.route').transition().duration(600).attr('opacity',1), 3500);
   flyToBounds({type:'LineString', coordinates:r.path}); if (r._el) mark(routeList, r._el); }
 function mark(list, el){ document.querySelectorAll('.item.sel').forEach(x=>x.classList.remove('sel')); el.classList.add('sel'); }
 
@@ -658,6 +681,11 @@ const centerBtn = document.getElementById('center');
 centerBtn.onclick = () => { pacific = !pacific; centerBtn.textContent = 'Tâm: ' + (pacific ? 'Thái Bình Dương' : 'châu Âu – châu Phi');
   svg.call(zoom.transform, d3.zoomIdentity); drawAll(); };
 window.addEventListener('resize', () => { drawAll(); });
+
+/* Chấm trắng chạy dọc tuyến để thấy chiều di chuyển */
+if (!matchMedia('(prefers-reduced-motion: reduce)').matches){
+  d3.timer(t => { if (layers.logistics) gRoutes.selectAll('.flow').attr('stroke-dashoffset', -t/90/k); });
+}
 
 /* ---------- load map ---------- */
 const URLS = ['https://cdn.jsdelivr.net/npm/world-atlas@2/countries-50m.json','https://cdn.jsdelivr.net/npm/world-atlas@2/countries-110m.json'];
