@@ -5,6 +5,12 @@ Quy ước số phiên bản `MAJOR.MINOR.PATCH`:
 - **MINOR** (1.**4**.0): thêm tính năng hoặc lớp thông tin mới.
 - **MAJOR** (**2**.0.0): thay đổi lớn về giao diện hoặc cấu trúc dữ liệu.
 
+## v1.4.0 — 19/11/2026
+- GDP (IMF 2026) và xuất/nhập khẩu (World Bank) cho gần 200 nền kinh tế, trước chỉ có 50.
+- Cột GDP mỏng lại cho đỡ rối; điểm đặt cột của các nước mới tự tính theo lãnh thổ.
+- Chưa có: Syria (IMF chỉ có số liệu năm 2010), Kosovo; nhập khẩu của Venezuela, Sudan, Guyana, Papua New Guinea để trống vì số liệu nguồn bất thường.
+- Tác vụ tự động chuyển sang Haiku 5.5: hằng ngày cập nhật logistics, xung đột, tin tức; hằng tháng cập nhật khối thương mại và GDP.
+
 ## v1.3.2 — 19/11/2026
 - Sửa vị trí cột GDP của Việt Nam (trước bị đặt lệch sang Lào) và Israel.
 - Di chuột lên một nước hiện luôn GDP, xuất, nhập khẩu.

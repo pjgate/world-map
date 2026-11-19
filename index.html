@@ -97,7 +97,7 @@ main{position:relative;overflow:hidden;background:var(--sea)}
       <div class="crit" style="border-style:solid">
         <label style="display:flex;gap:6px;align-items:center;cursor:pointer"><input type="checkbox" id="gdpOn" checked> <b>Cột GDP · Xuất · Nhập khẩu</b></label>
         <label style="display:flex;gap:6px;align-items:center;cursor:pointer;margin-top:4px"><input type="checkbox" id="gdpSqrt"> Thang căn bậc hai (dễ nhìn nước nhỏ)</label>
-        <div style="margin-top:6px">50 nền kinh tế lớn nhất. Cột rộng mờ = GDP; hai cột nhỏ bên trong: <span style="color:#1baf7a">■ Xuất</span> <span style="color:#eb6834">■ Nhập</span>. Cùng một thang USD, nên so được độ giàu và độ mở thương mại.</div>
+        <div style="margin-top:6px">Gần 200 nền kinh tế. Cột rộng mờ = GDP; hai cột nhỏ bên trong: <span style="color:#1baf7a">■ Xuất</span> <span style="color:#eb6834">■ Nhập</span>. Cùng một thang USD, nên so được độ giàu và độ mở thương mại.</div>
       </div>
       <div style="display:flex;gap:6px;margin:10px 0 4px"><button id="blocAll">Chọn hết</button><button id="blocNone">Bỏ chọn hết</button></div>
       <div id="blocList"></div>
@@ -150,10 +150,11 @@ main{position:relative;overflow:hidden;background:var(--sea)}
    DỮ LIỆU — sửa ở đây khi cần cập nhật. Mã nước = mã số ISO 3166-1
    (ví dụ Việt Nam = "704"), trùng với id trong world-atlas.
    ===================================================================== */
-const VERSION = '1.3.2';
+const VERSION = '1.4.0';
 const UPDATED = '19/11/2026';
 /* Ghi chú phiên bản (mới nhất ở trên) — đồng bộ với CHANGELOG.md */
 const CHANGELOG = [
+  ['1.4.0','19/11/2026','GDP và xuất nhập khẩu cho gần 200 nền kinh tế (trước chỉ 50); cột GDP mỏng hơn.'],
   ['1.3.2','19/11/2026','Sửa vị trí cột GDP của Việt Nam (bị lệch sang Lào), hiện GDP khi di chuột lên nước, cột tối thiểu 2,5px.'],
   ['1.3.1','19/11/2026','Hiện số phiên bản trên app, thêm lịch sử phiên bản.'],
   ['1.3.0','19/11/2026','Cột GDP, xuất khẩu, nhập khẩu cho 50 nền kinh tế lớn nhất.'],
@@ -327,6 +328,55 @@ const ECON = [
  ['398',[67,48],397921,91908,71882],['566',[8,9.5],386671,57536,57730],
  ['620',[-8,39.6],375197,152159,137862],['246',[26,63],338564,136479,122652]
 ].map(([id,at,gdp,ex,im])=>({id,at,gdp,ex,im}));
+/* Các nước còn lại (GDP IMF 2026, nếu thiếu thì World Bank/UN; xuất/nhập khẩu
+   World Bank, năm mới nhất có số liệu, có nước chỉ có số cũ 2015–2022).
+   Điểm đặt cột tự tính theo phần lãnh thổ lớn nhất. Dạng 'mã': [GDP, xuất, nhập].
+   Chưa có: Syria (IMF chỉ có số năm 2010), Kosovo (không có mã ISO trên bản đồ). */
+const ECON_EXTRA = {
+ '004':[19662,1476,8702], '008':[33333,7057,11676], '012':[331894,59426,49682], '016':[871,null,677],
+ '020':[4879,2414,2716], '024':[157297,36923,19627], '028':[2385,752,1176], '031':[78372,34112,27339],
+ '044':[17042,3202,6564], '048':[48849,41303,32379], '051':[31873,18618,19544], '052':[8483,2228,2120],
+ '060':[9194,1136,2174], '064':[3856,791,1607], '068':[80743,11904,13959], '070':[36771,12141,16199],
+ '072':[21937,7930,7940], '084':[3450,1345,1571], '090':[1836,411,811], '092':[1830,null,null],
+ '096':[16863,11482,9112], '100':[146507,62622,60013], '104':[83832,16791,23100], '108':[8137,285,643],
+ '112':[102042,49385,50784], '116':[52379,31712,33413], '120':[65135,7449,10855], '132':[3448,855,1473],
+ '136':[7765,3652,2592], '140':[3492,316,891], '144':[98964,19680,22278], '148':[25628,6503,3557],
+ '174':[1814,140,533], '178':[17028,4700,6352], '180':[122281,32984,35992], '184':[414,null,null],
+ '188':[109931,36770,31274], '191':[115915,46600,48962], '192':[107352,8769,8067], '196':[45171,35119,33829],
+ '204':[27786,4154,4683], '212':[791,123,388], '214':[146362,28563,36061], '218':[138199,38468,33568],
+ '222':[39838,11585,18354], '226':[13722,6656,3240], '231':[127145,10865,23265], '232':[1982,375,604],
+ '233':[51634,32636,32376], '234':[4053,1213,2212], '242':[6352,2376,3767], '258':[6324,1202,2922],
+ '262':[4725,5160,6058], '266':[23363,5390,6094], '268':[42716,16321,18905], '270':[2792,135,932],
+ '275':[16017,3544,8264], '288':[128638,29197,28244], '296':[401,11,292], '300':[304627,111837,121725],
+ '304':[3327,null,1700], '308':[1483,394,991], '316':[6910,null,4421], '320':[132270,17996,35603],
+ '324':[29930,11156,14201], '328':[33961,13739,null], '332':[39180,1241,4754], '340':[41505,9243,21351],
+ '348':[265911,179495,154058], '352':[43800,13915,14300], '364':[311950,100031,117176], '368':[245234,102917,104107],
+ '384':[112115,23882,23425], '388':[23028,6424,8244], '400':[64909,22734,30447], '404':[151151,13865,23850],
+ '408':[17199,null,null], '414':[146911,89709,55913], '417':[23606,3292,14495], '418':[18959,7819,6665],
+ '422':[34497,11770,14789], '426':[2972,1066,2088], '428':[53686,28116,29238], '430':[5642,554,1961],
+ '434':[52453,34896,27563], '438':[9442,null,null], '440':[105907,62895,58504], '442':[110417,210940,170295],
+ '446':[54228,45040,22768], '450':[21185,3341,5461], '454':[18309,1538,3995], '462':[8130,5096,4986],
+ '466':[33847,5381,7547], '470':[30712,29244,25801], '478':[14352,3181,5665], '480':[17119,4918,8641],
+ '492':[11126,null,null], '496':[28450,16306,16452], '498':[21889,5977,10420], '499':[10227,3178,5451],
+ '500':[81,null,15], '504':[195632,61746,81033], '508':[23275,9409,11867], '512':[121397,64749,47412],
+ '516':[17314,5080,9091], '520':[196,31,190], '524':[45844,2722,14122], '531':[3561,1280,2803],
+ '533':[4671,3004,2972], '534':[1888,788,1489], '540':[8549,1875,3479], '548':[1396,89,572],
+ '554':[273395,61798,68115], '558':[24227,7870,11435], '562':[24813,1487,4067], '580':[1096,null,777],
+ '583':[521,126,326], '584':[342,130,185], '585':[377,12,190], '591':[95024,37376,35881],
+ '598':[34403,12930,null], '600':[60542,17395,17619], '624':[2985,335,598], '626':[2170,2315,1381],
+ '630':[133222,65368,53898], '634':[203044,114385,74520], '646':[18673,2994,5577], '659':[1143,393,643],
+ '660':[456,null,null], '662':[2765,711,1446], '670':[1236,138,641], '674':[2417,3420,3169],
+ '678':[1161,75,219], '686':[40469,5287,13921], '688':[112025,46940,52353], '690':[2251,1751,2237],
+ '694':[8270,1114,3286], '703':[167062,131331,120540], '705':[86732,59159,54326], '706':[14174,1363,9002],
+ '716':[56713,5263,13507], '728':[6069,4652,3467], '729':[44688,5908,null], '740':[5908,2599,1678],
+ '748':[5792,2131,2367], '762':[20418,1753,5931], '768':[13437,1721,3781], '776':[716,60,384],
+ '780':[26836,11086,10190], '788':[60745,25869,30206], '795':[83065,8164,7563], '796':[1745,827,544],
+ '798':[65,3,57], '800':[73370,6177,13179], '804':[229406,56114,92210], '807':[21605,10445,12647],
+ '833':[7576,null,null], '834':[94889,15622,17082], '850':[4672,4549,5058], '854':[32513,6233,8124],
+ '858':[96092,23329,19191], '860':[178167,26173,43643], '862':[111303,8475,null], '882':[1376,171,575],
+ '887':[7435,938,10224], '894':[41243,11453,10313]
+};
+Object.entries(ECON_EXTRA).forEach(([id,[gdp,ex,im]]) => ECON.push({id, at:null, gdp, ex, im}));
 const ECON_BY = Object.fromEntries(ECON.map(e=>[e.id,e]));
 
 /* ---------------------------------------------------------------------
@@ -603,7 +653,7 @@ function drawNews(){
 const gdpOn = document.getElementById('gdpOn'), gdpSqrt = document.getElementById('gdpSqrt');
 const GDP_MAX = d3.max(ECON, e=>e.gdp), BAR_H = 120;
 const fmtUSD = m => m == null ? 'chưa có số liệu' : m >= 1e6 ? (m/1e6).toLocaleString('vi-VN',{maximumFractionDigits:2})+' nghìn tỷ USD' : Math.round(m/1e3).toLocaleString('vi-VN')+' tỷ USD';
-const barH = v => v == null ? 0 : Math.max(2.5, (gdpSqrt.checked ? Math.sqrt(v/GDP_MAX) : v/GDP_MAX) * BAR_H);
+const barH = v => v == null ? 0 : Math.max(1.5, (gdpSqrt.checked ? Math.sqrt(v/GDP_MAX) : v/GDP_MAX) * BAR_H);
 function econHtml(e, nm){
   const bal = e.ex!=null && e.im!=null ? e.ex - e.im : null;
   return `<b>${nm}</b><br>GDP: <b>${fmtUSD(e.gdp)}</b><br><span style="color:#1baf7a">■</span> Xuất khẩu: ${fmtUSD(e.ex)}<br><span style="color:#eb6834">■</span> Nhập khẩu: ${fmtUSD(e.im)}`+
@@ -622,10 +672,10 @@ function drawGdp(){
 }
 function sizeGdp(){
   gGdp.selectAll('g.ec').each(function(e){
-    const g = d3.select(this), W1 = 14/k, w = 5/k, hg = barH(e.gdp)/k, he = barH(e.ex)/k, hi = barH(e.im)/k;
+    const g = d3.select(this), W1 = 8/k, w = 2.6/k, hg = barH(e.gdp)/k, he = barH(e.ex)/k, hi = barH(e.im)/k;
     g.select('.gdp').attr('x',-W1/2).attr('y',-hg).attr('width',W1).attr('height',hg).attr('stroke-width',0.8/k);
-    g.select('.ex').attr('x',-w-0.5/k).attr('y',-he).attr('width',w).attr('height',he);
-    g.select('.im').attr('x',0.5/k).attr('y',-hi).attr('width',w).attr('height',hi);
+    g.select('.ex').attr('x',-w-0.3/k).attr('y',-he).attr('width',w).attr('height',he);
+    g.select('.im').attr('x',0.3/k).attr('y',-hi).attr('width',w).attr('height',hi);
   });
   gGdp.selectAll('g.ec').sort((a,b)=>projection(a.at)[1]-projection(b.at)[1]);
 }
@@ -791,6 +841,11 @@ const URLS = ['https://cdn.jsdelivr.net/npm/world-atlas@2/countries-50m.json','h
     try { const w = await d3.json(u); features = topojson.feature(w, w.objects.countries).features.filter(d=>d.id!=='010'); break; }
     catch(e){ console.warn('Không tải được', u, e); }
   }
+  /* điểm đặt cột cho nước chưa khai báo: tâm của phần lãnh thổ lớn nhất */
+  ECON.forEach(e => { if (e.at) return; const f = features.find(x=>x.id===e.id); if (!f) return;
+    const polys = f.geometry.type==='MultiPolygon' ? f.geometry.coordinates.map(c=>({type:'Polygon',coordinates:c})) : [f.geometry];
+    e.at = d3.geoCentroid(polys.reduce((a,b)=>d3.geoArea(b)>d3.geoArea(a)?b:a)); });
+  ECON.splice(0, ECON.length, ...ECON.filter(e=>e.at));
   drawAll();
 })();
 </script>
