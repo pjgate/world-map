@@ -5,6 +5,11 @@ Quy ước số phiên bản `MAJOR.MINOR.PATCH`:
 - **MINOR** (1.**4**.0): thêm tính năng hoặc lớp thông tin mới.
 - **MAJOR** (**2**.0.0): thay đổi lớn về giao diện hoặc cấu trúc dữ liệu.
 
+## v1.3.2 — 19/11/2026
+- Sửa vị trí cột GDP của Việt Nam (trước bị đặt lệch sang Lào) và Israel.
+- Di chuột lên một nước hiện luôn GDP, xuất, nhập khẩu.
+- Cột nhỏ nhất cao tối thiểu 2,5px để nước nhỏ vẫn nhìn thấy.
+
 ## v1.3.1 — 19/11/2026
 - Hiện số phiên bản trên app; thêm CHANGELOG và tag phiên bản trên GitHub.
 

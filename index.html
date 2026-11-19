@@ -150,10 +150,11 @@ main{position:relative;overflow:hidden;background:var(--sea)}
    DỮ LIỆU — sửa ở đây khi cần cập nhật. Mã nước = mã số ISO 3166-1
    (ví dụ Việt Nam = "704"), trùng với id trong world-atlas.
    ===================================================================== */
-const VERSION = '1.3.1';
+const VERSION = '1.3.2';
 const UPDATED = '19/11/2026';
 /* Ghi chú phiên bản (mới nhất ở trên) — đồng bộ với CHANGELOG.md */
 const CHANGELOG = [
+  ['1.3.2','19/11/2026','Sửa vị trí cột GDP của Việt Nam (bị lệch sang Lào), hiện GDP khi di chuột lên nước, cột tối thiểu 2,5px.'],
   ['1.3.1','19/11/2026','Hiện số phiên bản trên app, thêm lịch sử phiên bản.'],
   ['1.3.0','19/11/2026','Cột GDP, xuất khẩu, nhập khẩu cho 50 nền kinh tế lớn nhất.'],
   ['1.2.0','19/11/2026','Tuyến logistics cong mềm, chấm chạy theo chiều; nền tối mặc định.'],
@@ -312,12 +313,12 @@ const ECON = [
  ['682',[45,24],1343346,380370,317307],['756',[8.2,46.8],1135739,817414,580072],
  ['616',[19.4,52],1133088,521445,441992],['158',[121,23.7],1019696,664506,351441],
  ['056',[4.5,50.6],772699,550008,526554],['032',[-64,-34],768206,105492,81218],
- ['376',[35,31.4],746982,173988,140592],['752',[15,62],745081,366211,306338],
+ ['376',[34.8,31.2],746982,173988,140592],['752',[15,62],745081,366211,306338],
  ['372',[-8,53.2],709972,961839,608488],['702',[103.8,1.35],667889,1073991,786021],
  ['784',[54.3,24],661018,752450,481852],['578',[9,61],651712,241037,162845],
  ['040',[14.5,47.5],616896,319409,279663],['764',[101,15],599115,411510,351174],
  ['170',[-73,4],572735,68866,87542],['458',[102,4],547100,341991,278551],
- ['704',[105.8,16.5],542130,505366,339930],['050',[90.3,23.7],506357,53848,73445],
+ ['704',[108.2,14.3],542130,505366,339930],['050',[90.3,23.7],506357,53848,73445],
  ['608',[122,12],501692,114933,185164],['208',[9.5,56],499354,326884,253019],
  ['710',[25,-29],489083,134488,119489],['642',[25,46],470091,152427,159597],
  ['344',[114.17,22.32],455156,853825,723319],['586',[69.5,30],450130,null,63703],
@@ -512,7 +513,7 @@ function drawAll(){
   gSphere.selectAll('path').data([{type:'Sphere'}]).join('path').attr('d',path).attr('fill',css('--sea')).attr('stroke',css('--line2'));
   gLand.selectAll('path').data(features).join('path').attr('d',path)
     .attr('stroke',css('--landStroke')).style('cursor','pointer')
-    .on('mousemove',(e,d)=>showTip(e, `<b>${name(d)}</b>`+countryBlocLine(d)))
+    .on('mousemove',(e,d)=>showTip(e, `<b>${name(d)}</b>`+countryBlocLine(d)+(ECON_BY[d.id]?`<br>GDP: ${fmtUSD(ECON_BY[d.id].gdp)} · Xuất: ${fmtUSD(ECON_BY[d.id].ex)} · Nhập: ${fmtUSD(ECON_BY[d.id].im)}`:'')))
     .on('mouseleave',hideTip)
     .on('click',(e,d)=>showCountry(d));
   gBorder.selectAll('path').data(features.filter(d=>conflictCountries.has(d.id))).join('path').attr('d',path)
@@ -602,7 +603,7 @@ function drawNews(){
 const gdpOn = document.getElementById('gdpOn'), gdpSqrt = document.getElementById('gdpSqrt');
 const GDP_MAX = d3.max(ECON, e=>e.gdp), BAR_H = 120;
 const fmtUSD = m => m == null ? 'chưa có số liệu' : m >= 1e6 ? (m/1e6).toLocaleString('vi-VN',{maximumFractionDigits:2})+' nghìn tỷ USD' : Math.round(m/1e3).toLocaleString('vi-VN')+' tỷ USD';
-const barH = v => v == null ? 0 : (gdpSqrt.checked ? Math.sqrt(v/GDP_MAX) : v/GDP_MAX) * BAR_H;
+const barH = v => v == null ? 0 : Math.max(2.5, (gdpSqrt.checked ? Math.sqrt(v/GDP_MAX) : v/GDP_MAX) * BAR_H);
 function econHtml(e, nm){
   const bal = e.ex!=null && e.im!=null ? e.ex - e.im : null;
   return `<b>${nm}</b><br>GDP: <b>${fmtUSD(e.gdp)}</b><br><span style="color:#1baf7a">■</span> Xuất khẩu: ${fmtUSD(e.ex)}<br><span style="color:#eb6834">■</span> Nhập khẩu: ${fmtUSD(e.im)}`+
