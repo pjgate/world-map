@@ -5,6 +5,9 @@ Quy ước số phiên bản `MAJOR.MINOR.PATCH`:
 - **MINOR** (1.**4**.0): thêm tính năng hoặc lớp thông tin mới.
 - **MAJOR** (**2**.0.0): thay đổi lớn về giao diện hoặc cấu trúc dữ liệu.
 
+## v1.4.3 — 20/11/2026
+- Thêm 3 tin nổi bật ngày 19–20/11: tên lửa Houthi nhắm Riyadh, mức đe dọa Hormuz của JMIC, lưu lượng dầu qua Hormuz (Kpler).
+
 ## v1.4.2 — 20/11/2026
 - Tin nổi bật chỉ giữ 30 ngày: tin hết hạn được xoá khi cập nhật. Bỏ tin Suez (14/10).
 
