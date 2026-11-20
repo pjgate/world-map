@@ -150,10 +150,11 @@ main{position:relative;overflow:hidden;background:var(--sea)}
    DỮ LIỆU — sửa ở đây khi cần cập nhật. Mã nước = mã số ISO 3166-1
    (ví dụ Việt Nam = "704"), trùng với id trong world-atlas.
    ===================================================================== */
-const VERSION = '1.4.1';
+const VERSION = '1.4.2';
 const UPDATED = '20/11/2026';
 /* Ghi chú phiên bản (mới nhất ở trên) — đồng bộ với CHANGELOG.md */
 const CHANGELOG = [
+  ['1.4.2','20/11/2026','Tin nổi bật chỉ giữ 30 ngày, tin hết hạn tự xoá; bỏ tin Suez 14/10.'],
   ['1.4.1','20/11/2026','Cập nhật ngày: tàu dầu trúng đạn không rõ nguồn gốc gần Khasab (Oman) trong eo Hormuz, đêm 18/11.'],
   ['1.4.0','19/11/2026','GDP và xuất nhập khẩu cho gần 200 nền kinh tế (trước chỉ 50); cột GDP mỏng hơn.'],
   ['1.3.2','19/11/2026','Sửa vị trí cột GDP của Việt Nam (bị lệch sang Lào), hiện GDP khi di chuột lên nước, cột tối thiểu 2,5px.'],
@@ -440,11 +441,7 @@ const NEWS = [
   {date:'2026-11-11', cat:'logistics', score:3, at:[-79.7,9.1], countries:['591'],
    title:'Kênh Panama nâng lên 34 lượt tàu/ngày',
    note:'Mực nước cải thiện, nới mớn nước tối đa ở âu tàu Neopanamax.',
-   src:'https://www.ajot.com/news/panama-canal-increases-daily-transits-to-34-and-raises-maximum-allowable-draft-at-neopanamax-locks'},
-  {date:'2026-10-14', cat:'logistics', score:3, at:[32.35,30.6], countries:['818'],
-   title:'Hãng tàu container quay lại kênh Suez',
-   note:'Công suất container qua Suez lần đầu vượt một nửa mức trước khủng hoảng; dự kiến trở lại hoàn toàn quý 1/2027.',
-   src:'https://www.seatrade-maritime.com/containers/full-suez-return-for-container-carriers-expected-by-q1-2027'}
+   src:'https://www.ajot.com/news/panama-canal-increases-daily-transits-to-34-and-raises-maximum-allowable-draft-at-neopanamax-locks'}
 ];
 
 const SOURCES = [

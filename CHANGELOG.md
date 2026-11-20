@@ -5,6 +5,9 @@ Quy ước số phiên bản `MAJOR.MINOR.PATCH`:
 - **MINOR** (1.**4**.0): thêm tính năng hoặc lớp thông tin mới.
 - **MAJOR** (**2**.0.0): thay đổi lớn về giao diện hoặc cấu trúc dữ liệu.
 
+## v1.4.2 — 20/11/2026
+- Tin nổi bật chỉ giữ 30 ngày: tin hết hạn được xoá khi cập nhật. Bỏ tin Suez (14/10).
+
 ## v1.4.1 — 20/11/2026
 - Cập nhật ngày: tàu dầu trúng đạn không rõ nguồn gốc cách Khasab (Oman) khoảng 6 hải lý, đêm 18/11; thêm vào tin nổi bật và ghi chú eo Hormuz.
 
