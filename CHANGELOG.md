@@ -5,6 +5,9 @@ Quy ước số phiên bản `MAJOR.MINOR.PATCH`:
 - **MINOR** (1.**4**.0): thêm tính năng hoặc lớp thông tin mới.
 - **MAJOR** (**2**.0.0): thay đổi lớn về giao diện hoặc cấu trúc dữ liệu.
 
+## v1.4.1 — 20/11/2026
+- Cập nhật ngày: tàu dầu trúng đạn không rõ nguồn gốc cách Khasab (Oman) khoảng 6 hải lý, đêm 18/11; thêm vào tin nổi bật và ghi chú eo Hormuz.
+
 ## v1.4.0 — 19/11/2026
 - GDP (IMF 2026) và xuất/nhập khẩu (World Bank) cho gần 200 nền kinh tế, trước chỉ có 50.
 - Cột GDP mỏng lại cho đỡ rối; điểm đặt cột của các nước mới tự tính theo lãnh thổ.

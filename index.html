@@ -150,10 +150,11 @@ main{position:relative;overflow:hidden;background:var(--sea)}
    DỮ LIỆU — sửa ở đây khi cần cập nhật. Mã nước = mã số ISO 3166-1
    (ví dụ Việt Nam = "704"), trùng với id trong world-atlas.
    ===================================================================== */
-const VERSION = '1.4.0';
-const UPDATED = '19/11/2026';
+const VERSION = '1.4.1';
+const UPDATED = '20/11/2026';
 /* Ghi chú phiên bản (mới nhất ở trên) — đồng bộ với CHANGELOG.md */
 const CHANGELOG = [
+  ['1.4.1','20/11/2026','Cập nhật ngày: tàu dầu trúng đạn không rõ nguồn gốc gần Khasab (Oman) trong eo Hormuz, đêm 18/11.'],
   ['1.4.0','19/11/2026','GDP và xuất nhập khẩu cho gần 200 nền kinh tế (trước chỉ 50); cột GDP mỏng hơn.'],
   ['1.3.2','19/11/2026','Sửa vị trí cột GDP của Việt Nam (bị lệch sang Lào), hiện GDP khi di chuột lên nước, cột tối thiểu 2,5px.'],
   ['1.3.1','19/11/2026','Hiện số phiên bản trên app, thêm lịch sử phiên bản.'],
@@ -234,7 +235,7 @@ const CONFLICTS = [
 /* status: blocked | high | moderate | normal | watch | seasonal */
 const CHOKEPOINTS = [
   {name:'Eo Hormuz', at:[56.4,26.5], status:'blocked', changed:'2026-11-18',
-   note:'Bị Iran phong tỏa phần lớn từ 28/02/2026. Tàu đi theo hành lang phía nam có Mỹ hộ tống, trung bình khoảng 28 lượt/ngày (12–14/11/2026). IMO ghi nhận 138 vụ việc với tàu thương mại, 25 thuyền viên thiệt mạng.'},
+   note:'Bị Iran phong tỏa phần lớn từ 28/02/2026. Tàu đi theo hành lang phía nam có Mỹ hộ tống, trung bình khoảng 28 lượt/ngày (12–14/11/2026). Đêm 18/11 một tàu dầu bị trúng đạn không rõ nguồn gốc cách Khasab (Oman) khoảng 6 hải lý. IMO ghi nhận 138 vụ việc với tàu thương mại, 25 thuyền viên thiệt mạng.'},
   {name:'Eo Bab el-Mandeb', at:[43.4,12.6], status:'high', changed:'2026-11-17',
    note:'Houthi đe dọa và tấn công trở lại. Ngày 17/11/2026 có 44 lượt tàu đi qua.'},
   {name:'Kênh đào Suez', at:[32.35,30.6], status:'moderate',
@@ -404,6 +405,10 @@ const CATS = {
   logistics:{c:'#1baf7a', t:'Logistics'}
 };
 const NEWS = [
+  {date:'2026-11-19', cat:'logistics', score:4, at:[56.2,26.2], countries:['364','512'],
+   title:'Tàu dầu trúng đạn không rõ nguồn gốc gần Khasab, Oman',
+   note:'UKMTO cảnh báo một tàu dầu bị trúng đạn cách Khasab khoảng 6 hải lý về phía bắc, đêm 18/11 (giờ UAE). Đây là vụ tấn công tàu mới nhất ở eo Hormuz, nơi tàu qua lại vẫn ở mức thấp.',
+   src:'https://gulfnews.com/world/gulf/oman/tanker-hit-by-unknown-projectile-near-oman-in-latest-hormuz-attack-1.500752860'},
   {date:'2026-11-19', cat:'trade', score:5, at:[114.06,22.54], countries:['840','156'],
    title:'Trump gặp Tập Cận Bình tại APEC Thâm Quyến',
    note:'Thượng đỉnh Mỹ – Trung bên lề Hội nghị APEC 2026 ở Thâm Quyến, diễn ra ngay sau khi Mỹ siết thêm xuất khẩu chip AI.',
