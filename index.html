@@ -150,10 +150,11 @@ main{position:relative;overflow:hidden;background:var(--sea)}
    DỮ LIỆU — sửa ở đây khi cần cập nhật. Mã nước = mã số ISO 3166-1
    (ví dụ Việt Nam = "704"), trùng với id trong world-atlas.
    ===================================================================== */
-const VERSION = '1.4.3';
-const UPDATED = '20/11/2026';
+const VERSION = '1.4.4';
+const UPDATED = '22/11/2026';
 /* Ghi chú phiên bản (mới nhất ở trên) — đồng bộ với CHANGELOG.md */
 const CHANGELOG = [
+  ['1.4.4','22/11/2026','Cập nhật ngày: Tòa án Công lý quốc tế kết luận Myanmar diệt chủng người Rohingya; bộ ba Trump–Tập–Putin ra tuyên bố hòa bình.'],
   ['1.4.3','20/11/2026','Cập nhật ngày: tên lửa Houthi nhắm Riyadh làm hư hại tòa PIF; JMIC nâng mức đe dọa Hormuz; lưu lượng dầu qua Hormuz giảm.'],
   ['1.4.2','20/11/2026','Tin nổi bật chỉ giữ 30 ngày, tin hết hạn tự xoá; bỏ tin Suez 14/10.'],
   ['1.4.1','20/11/2026','Cập nhật ngày: tàu dầu trúng đạn không rõ nguồn gốc gần Khasab (Oman) trong eo Hormuz, đêm 18/11.'],
@@ -407,6 +408,18 @@ const CATS = {
   logistics:{c:'#1baf7a', t:'Logistics'}
 };
 const NEWS = [
+  {date:'2026-11-19', cat:'conflict', score:4, at:[95.9,21.9], countries:['104'],
+   title:'Tòa án Công lý quốc tế: Myanmar phạm tội diệt chủng với người Rohingya',
+   note:'Đây là phán quyết đầu tiên của ICJ kết luận một quốc gia phạm tội diệt chủng, và là lần đầu tiên tòa đưa ra kết luận này trong vụ kiện Gambia kiện Myanmar.',
+   src:'https://www.opb.org/article/2026/11/19/top-u-n-court-rules-myanmar-committed-genocide-against-rohingya/'},
+  {date:'2026-11-19', cat:'conflict', score:4, at:[114.06,22.54], countries:['840','156','643'],
+   title:'Trump, Tập Cận Bình và Putin gặp ba bên, ra "tuyên bố hòa bình"',
+   note:'Cuộc gặp kéo dài 90 phút bên lề APEC ở Thâm Quyến, bàn về kiểm soát vũ khí hạt nhân và Ukraine; tuyên bố chung có ít cam kết cụ thể và không đề cập Iran.',
+   src:'https://www.businessday.co.za/world/americas/2026-11-19-xi-trump-and-putin-pledge-nuclear-restraint-and-un-reform/'},
+  {date:'2026-11-19', cat:'logistics', score:4, at:[56.4,26.5], countries:['364','840'],
+   title:'Mỹ phong tỏa Iran: 147 tàu bị chuyển hướng, 5 tàu bị vô hiệu hóa',
+   note:'Theo số liệu CENTCOM được Lloyd\'s List dẫn lại, lực lượng Mỹ chuyển hướng 147 tàu và vô hiệu hóa 5 tàu; có một tàu hàng rời bị tấn công vì bị cho là vi phạm phong tỏa.',
+   src:'https://www.lloydslistintelligence.com/resources/blog/strait-of-hormuz-brief-19-november-2026'},
   {date:'2026-11-19', cat:'conflict', score:4, at:[46.7,24.7], countries:['682','887'],
    title:'Tên lửa Houthi nhắm Riyadh, tòa tháp quỹ đầu tư quốc gia Saudi bị hư hại',
    note:'Liên quân do Saudi dẫn đầu nói đã chặn một tên lửa Houthi nhắm vào Riyadh; AFP ghi nhận tòa tháp PIF (80 tầng) bị hư hại. Ngày 20/11 Bộ Ngoại giao Saudi cho biết các cơ sở ở khu tài chính King Abdullah cũng bị đánh trúng.',

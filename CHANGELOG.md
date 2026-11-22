@@ -5,6 +5,9 @@ Quy ước số phiên bản `MAJOR.MINOR.PATCH`:
 - **MINOR** (1.**4**.0): thêm tính năng hoặc lớp thông tin mới.
 - **MAJOR** (**2**.0.0): thay đổi lớn về giao diện hoặc cấu trúc dữ liệu.
 
+## v1.4.4 — 22/11/2026
+- Cập nhật ngày: thêm 3 tin nổi bật 19/11 — ICJ kết luận Myanmar diệt chủng người Rohingya; bộ ba Trump–Tập–Putin ra tuyên bố hòa bình; Mỹ phong tỏa Iran (147 tàu bị chuyển hướng).
+
 ## v1.4.3 — 20/11/2026
 - Thêm 3 tin nổi bật ngày 19–20/11: tên lửa Houthi nhắm Riyadh, mức đe dọa Hormuz của JMIC, lưu lượng dầu qua Hormuz (Kpler).
 
