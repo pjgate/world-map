@@ -150,10 +150,11 @@ main{position:relative;overflow:hidden;background:var(--sea)}
    DỮ LIỆU — sửa ở đây khi cần cập nhật. Mã nước = mã số ISO 3166-1
    (ví dụ Việt Nam = "704"), trùng với id trong world-atlas.
    ===================================================================== */
-const VERSION = '1.4.4';
-const UPDATED = '22/11/2026';
+const VERSION = '1.4.5';
+const UPDATED = '25/11/2026';
 /* Ghi chú phiên bản (mới nhất ở trên) — đồng bộ với CHANGELOG.md */
 const CHANGELOG = [
+  ['1.4.5','25/11/2026','Cập nhật ngày: lưu lượng qua Hormuz giảm hơn 40%, Mỹ đưa 7 công ty Đông Nam Á vào danh sách đen chip, Houthi dọa cảng Jeddah, Ukraine đánh chìm tàu Nga ngoài khơi Libya.'],
   ['1.4.4','22/11/2026','Cập nhật ngày: Tòa án Công lý quốc tế kết luận Myanmar diệt chủng người Rohingya; bộ ba Trump–Tập–Putin ra tuyên bố hòa bình.'],
   ['1.4.3','20/11/2026','Cập nhật ngày: tên lửa Houthi nhắm Riyadh làm hư hại tòa PIF; JMIC nâng mức đe dọa Hormuz; lưu lượng dầu qua Hormuz giảm.'],
   ['1.4.2','20/11/2026','Tin nổi bật chỉ giữ 30 ngày, tin hết hạn tự xoá; bỏ tin Suez 14/10.'],
@@ -193,16 +194,16 @@ const BLOCS = {
 
 /* level: critical | high | elevated | watch ; status: 'active' | 'ceasefire' */
 const CONFLICTS = [
-  {name:'Nga – Ukraine', level:'critical', status:'active', since:'02/2022', at:[37.5,48.2], countries:['804','643'], killed:64439,
-   note:'Xung đột đẫm máu nhất năm 2026, số người chết gấp hơn 13 lần bất kỳ cuộc chiến nào khác.'},
-  {name:'Iran – Israel / Mỹ', level:'critical', status:'active', changed:'2026-11-18', since:'28/02/2026', at:[54.5,28.5], countries:['364','376'], killed:3859,
-   note:'Từ tháng 9 chủ yếu giao tranh trên biển; tháng 11 lan lại vào đất liền. Ngày 18/11 Iran tấn công Kuwait và Bahrain sau khi Mỹ đánh đảo Qeshm ở eo Hormuz.'},
-  {name:'Israel – Gaza (Hamas)', level:'high', status:'ceasefire', changed:'2026-11-18', since:'10/2023', at:[34.4,31.45], countries:['376','275'], killed:1155,
-   note:'Ngừng bắn từ tháng 10/2025, nhưng ngày 18/11/2026 Israel tuyên bố một đợt tấn công mới ở miền trung Gaza.'},
+  {name:'Nga – Ukraine', level:'critical', status:'active', changed:'2026-11-23', since:'02/2022', at:[37.5,48.2], countries:['804','643'], killed:64439,
+   note:'Xung đột đẫm máu nhất năm 2026, số người chết gấp hơn 13 lần bất kỳ cuộc chiến nào khác. Ngày 23/11 Ukraine dùng drone biển đánh chìm tàu hộ tống Nga Merkury gần Benghazi (Libya); đàm phán do Mỹ làm trung gian chưa có đột phá.'},
+  {name:'Iran – Israel / Mỹ', level:'critical', status:'active', changed:'2026-11-24', since:'28/02/2026', at:[54.5,28.5], countries:['364','376'], killed:3859,
+   note:'Từ tháng 9 chủ yếu giao tranh trên biển; tháng 11 lan lại vào đất liền. Ngày 18/11 Iran tấn công Kuwait và Bahrain sau khi Mỹ đánh đảo Qeshm. Tuần 16–23/11 có khoảng 10 tàu dầu bị tấn công ở Hormuz; ngày 23/11 Iran tuyên bố sẽ dùng mọi công cụ chống phong tỏa hải quân của Mỹ.'},
+  {name:'Israel – Gaza (Hamas)', level:'high', status:'ceasefire', changed:'2026-11-24', since:'10/2023', at:[34.4,31.45], countries:['376','275'], killed:1155,
+   note:'Ngừng bắn từ tháng 10/2025 nhưng Israel vẫn không kích: ngày 18/11 tuyên bố đợt tấn công mới ở miền trung Gaza, ngày 24/11 giết giám đốc an ninh nội bộ của Hamas. Theo Al Jazeera, ít nhất 1.679 người Palestine thiệt mạng kể từ khi ngừng bắn.'},
   {name:'Israel – Hezbollah (Liban)', level:'elevated', status:'ceasefire', since:'03/2026', at:[35.7,33.4], countries:['422','376'], killed:4593,
    note:'Bùng phát lại tháng 3/2026; ngừng bắn tạm thời từ 16/4 nhưng Israel vẫn không kích. Đàm phán bế tắc.'},
-  {name:'Yemen / Biển Đỏ (Houthi)', level:'high', status:'active', changed:'2026-11-17', since:'07/2026 (lần này)', at:[44.5,15.5], countries:['887'], killed:4808,
-   note:'Giao tranh nổ ra lại tháng 7/2026 sau 4 năm đình chiến. Houthi đe dọa tàu qua Bab el-Mandeb và tấn công đường ống Đông–Tây của Ả Rập Xê Út.'},
+  {name:'Yemen / Biển Đỏ (Houthi)', level:'high', status:'active', changed:'2026-11-25', since:'07/2026 (lần này)', at:[44.5,15.5], countries:['887'], killed:4808,
+   note:'Giao tranh nổ ra lại tháng 7/2026 sau 4 năm đình chiến. Houthi đe dọa tàu qua Bab el-Mandeb và tấn công đường ống Đông–Tây của Ả Rập Xê Út. Ngày 20/11 liên quân do Saudi dẫn đầu không kích cảng Hodeidah; Houthi dọa đánh Jeddah và mọi cảng Biển Đỏ của Saudi.'},
   {name:'Nội chiến Sudan (SAF – RSF)', level:'high', status:'active', since:'04/2023', at:[30.0,13.3], countries:['729'], killed:3280,
    note:'Quân đội giành lại đất ở Kordofan. Hàng triệu người phải sơ tán, nạn đói nghiêm trọng.'},
   {name:'Somalia – al-Shabaab', level:'high', status:'active', since:'2006', at:[45.3,2.8], countries:['706'], killed:2915,
@@ -221,8 +222,8 @@ const CONFLICTS = [
    note:'Bắt cóc hàng loạt và tấn công làng mạc.'},
   {name:'CHDC Congo – M23 / ADF', level:'elevated', status:'active', since:'01/2025', at:[29.0,-1.0], countries:['180'], killed:null,
    note:'Miền đông Congo; ngày 4/11/2026 nghi phạm ADF tấn công các làng ở Bắc Kivu, 33 người chết.'},
-  {name:'Myanmar (nội chiến)', level:'elevated', status:'active', since:'02/2021', at:[96.0,21.5], countries:['104'], killed:null,
-   note:'Nội chiến sau đảo chính 2021.'},
+  {name:'Myanmar (nội chiến)', level:'elevated', status:'active', changed:'2026-11-23', since:'02/2021', at:[96.0,21.5], countries:['104'], killed:null,
+   note:'Nội chiến sau đảo chính 2021. ICJ kết luận Myanmar diệt chủng người Rohingya (19/11); ngày 23/11 Anh trừng phạt 5 tướng lĩnh cấp cao.'},
   {name:'Ấn Độ – Pakistan (Kashmir)', level:'elevated', status:'active', since:'05/2025', at:[75.0,34.3], countries:['356','586'], killed:null,
    note:'Căng thẳng quân sự từ đợt giao tranh tháng 5/2025.'},
   {name:'Trung Quốc – Đài Loan', level:'elevated', status:'active', since:'08/2022', at:[120.2,23.8], countries:['156','158'], killed:null,
@@ -237,10 +238,10 @@ const CONFLICTS = [
 
 /* status: blocked | high | moderate | normal | watch | seasonal */
 const CHOKEPOINTS = [
-  {name:'Eo Hormuz', at:[56.4,26.5], status:'blocked', changed:'2026-11-18',
-   note:'Bị Iran phong tỏa phần lớn từ 28/02/2026. Tàu đi theo hành lang phía nam có Mỹ hộ tống, trung bình khoảng 28 lượt/ngày (12–14/11/2026). Đêm 18/11 một tàu dầu bị trúng đạn không rõ nguồn gốc cách Khasab (Oman) khoảng 6 hải lý. IMO ghi nhận 138 vụ việc với tàu thương mại, 25 thuyền viên thiệt mạng.'},
-  {name:'Eo Bab el-Mandeb', at:[43.4,12.6], status:'high', changed:'2026-11-17',
-   note:'Houthi đe dọa và tấn công trở lại. Ngày 17/11/2026 có 44 lượt tàu đi qua.'},
+  {name:'Eo Hormuz', at:[56.4,26.5], status:'blocked', changed:'2026-11-24',
+   note:'Bị Iran phong tỏa phần lớn từ 28/02/2026. Tàu đi theo hành lang có Mỹ hộ tống trung bình 38 lượt/ngày (19–21/11, theo JMIC), so với khoảng 138 lượt/ngày năm 2025. Số tàu ra vào vùng Vịnh 17–23/11 giảm hơn 40% so với đầu tháng; khoảng 218 tàu nằm chờ phía đông eo biển. JMIC giữ mức đe dọa "nghiêm trọng"; IMO ghi nhận 141 vụ việc, 25 thuyền viên thiệt mạng (23/11).'},
+  {name:'Eo Bab el-Mandeb', at:[43.4,12.6], status:'high', changed:'2026-11-25',
+   note:'Houthi đe dọa và tấn công trở lại. Ngày 17/11/2026 có 44 lượt tàu đi qua. Sau khi liên quân Saudi đánh cảng Hodeidah, Houthi kêu gọi hãng tàu rút khỏi các cảng Biển Đỏ của Saudi và dọa tấn công Jeddah.'},
   {name:'Kênh đào Suez', at:[32.35,30.6], status:'moderate',
    note:'Hãng tàu container đang quay lại dần. Đầu tháng 10/2026 công suất container qua kênh lần đầu vượt một nửa mức trước khủng hoảng; dự kiến trở lại hoàn toàn vào quý 1/2027.'},
   {name:'Mũi Hảo Vọng', at:[18.4,-34.8], status:'moderate',
@@ -408,6 +409,50 @@ const CATS = {
   logistics:{c:'#1baf7a', t:'Logistics'}
 };
 const NEWS = [
+  {date:'2026-11-25', cat:'logistics', score:4, at:[39.17,21.5], countries:['887','682'],
+   title:'Houthi dọa tấn công Jeddah và mọi cảng Biển Đỏ của Saudi',
+   note:'Houthi tuyên bố sẽ đánh Jeddah và các cảng Biển Đỏ khác nếu Saudi tấn công Hodeidah, kêu gọi hãng tàu rút tàu. Liên quân sau đó đánh các mục tiêu ở Hodeidah, Saada và Amran.',
+   src:'https://www.brecorder.com/news/40450658/yemens-houthis-threaten-to-target-jeddah-and-other-saudi-red-sea-ports'},
+  {date:'2026-11-24', cat:'logistics', score:5, at:[56.4,26.5], countries:['364','840'],
+   title:'Lưu lượng tàu qua Hormuz giảm hơn 40% trong một tuần',
+   note:'Theo MarineTraffic, 125 tàu ra vào vùng Vịnh trong 17–23/11, so với 226 tàu trong 1–7/11; trước chiến sự mỗi ngày có 125–140 tàu. Sáng 24/11 hải quân Iran nói hai tàu dầu trúng thủy lôi và bốc cháy.',
+   src:'https://www.aljazeera.com/news/2026/11/24/hormuz-oil-traffic-is-down-40-percent-are-irans-tanker-attacks-working'},
+  {date:'2026-11-24', cat:'energy', score:4, at:[58.2,24.8], countries:[],
+   title:'Brent bật lại 91,4 USD sau các vụ tấn công tàu ở Hormuz',
+   note:'Brent tháng 1 tăng 2,03 USD lên 91,40 USD/thùng, sau khi chạm 88,10 USD, mức thấp nhất từ 27/8. Ba tàu bị trúng vật thể không rõ nguồn gốc khi qua Hormuz ngày 23/11.',
+   src:'https://www.nationthailand.com/news/world/40073886'},
+  {date:'2026-11-24', cat:'trade', score:4, at:[-77.04,38.9], countries:['840','156'],
+   title:'Mỹ chuẩn bị tăng thuế với một số hàng Trung Quốc và EU',
+   note:'Theo Bloomberg, Mỹ có thể tăng thuế sớm nhất từ thứ Ba; các mức thuế mới nhắm vào từng mặt hàng và không vượt mức đã thỏa thuận trong các hiệp định thương mại.',
+   src:'https://bloomberg.com/news/articles/2026-11-24/us-readies-tariff-hike-on-china-eu-goods-as-soon-as-tuesday'},
+  {date:'2026-11-24', cat:'tech', score:4, at:[116.4,39.9], countries:['156','840'],
+   title:'Trung Quốc tạm dừng lệnh cấm khoáng sản thiết yếu để giữ đình chiến với Mỹ',
+   note:'Theo Bloomberg, Bắc Kinh chọn chưa trả đũa sau vụ chip Nvidia, giữ thỏa thuận đình chiến thương mại với Washington.',
+   src:'https://www.bloomberg.com/news/articles/2026-11-24/china-halts-critical-minerals-ban-to-maintain-truce-with-us'},
+  {date:'2026-11-24', cat:'conflict', score:3, at:[34.45,31.5], countries:['376','275'],
+   title:'Israel không kích giết giám đốc an ninh nội bộ của Hamas',
+   note:'Naeem Abu Nahel và 6 người khác thiệt mạng; một ngày trước, một nhân viên UNRWA bị giết ở trại Jabalia. Ngừng bắn từ 10/2025 tiếp tục bị thử thách.',
+   src:'https://www.justsecurity.org/165763/early-edition-november-24-2026/'},
+  {date:'2026-11-23', cat:'tech', score:5, at:[103.8,1.35], countries:['840','702','458','764','156'],
+   title:'Mỹ đưa Megaspeed và 6 công ty Đông Nam Á vào danh sách đen xuất khẩu',
+   note:'BIS đưa 7 công ty (3 ở Malaysia, 2 ở Singapore, 1 ở Thái Lan) vào Entity List; xuất chip Nvidia cao cấp cho họ cần giấy phép. Malaysia sẽ yêu cầu trung tâm dữ liệu không phục vụ các công ty này.',
+   src:'https://www.aljazeera.com/economy/2026/11/24/us-adds-megaspeed-firm-at-centre-of-nvidia-scandal-to-export-control-list'},
+  {date:'2026-11-23', cat:'conflict', score:4, at:[20.07,32.12], countries:['804','643','434'],
+   title:'Ukraine đánh chìm tàu chiến Nga ngoài khơi Libya',
+   note:'Drone biển Sea Baby của Ukraine đánh tàu hộ tống Merkury gần Benghazi và tấn công một tàu hàng; Kyiv gọi đây là tự vệ chính đáng. Chiến sự lan sang Địa Trung Hải.',
+   src:'https://www.aljazeera.com/news/liveblog/2026/11/24/russia-ukraine-war-live-kyiv-says-attack-on-ships-off-libya-self-delfence'},
+  {date:'2026-11-23', cat:'conflict', score:4, at:[96.1,19.75], countries:['826','104'],
+   title:'Anh trừng phạt 5 tướng Myanmar sau phán quyết diệt chủng của ICJ',
+   note:'Anh trừng phạt 5 lãnh đạo quân đội cấp cao của Myanmar, vài ngày sau khi ICJ kết luận Myanmar diệt chủng người Rohingya.',
+   src:'https://www.justsecurity.org/165763/early-edition-november-24-2026/'},
+  {date:'2026-11-22', cat:'logistics', score:4, at:[56.36,25.34], countries:['364','784'],
+   title:'Thêm 4 tàu bị tấn công, Iran mở rộng danh sách đen sang tàu kéo',
+   note:'Ba tàu dầu và một tàu hàng rời (đang neo ngoài Khor Fakkan, UAE, bốc cháy) bị tấn công ngày 22/11, nâng số vụ đánh tàu dầu lên 10 trong một tuần. Cơ quan eo biển của Iran thêm 26 tàu kéo vào danh sách "không tuân thủ".',
+   src:'https://gcaptain.com/four-more-ships-attacked-as-iran-widens-hormuz-crackdown-to-tugboats/'},
+  {date:'2026-11-20', cat:'conflict', score:4, at:[42.95,14.8], countries:['682','887'],
+   title:'Liên quân Saudi không kích cảng Hodeidah của Houthi',
+   note:'Liên quân nói đã phá năng lực buôn lậu vũ khí và tên lửa ở cảng; Houthi yêu cầu sơ tán các cảng Biển Đỏ của Saudi và cảnh báo hãng bay tránh không phận Saudi.',
+   src:'https://cyprus-mail.com/2026/11/20/saudi-forces-strike-houthi-controlled-port-in-yemen'},
   {date:'2026-11-19', cat:'conflict', score:4, at:[95.9,21.9], countries:['104'],
    title:'Tòa án Công lý quốc tế: Myanmar phạm tội diệt chủng với người Rohingya',
    note:'Đây là phán quyết đầu tiên của ICJ kết luận một quốc gia phạm tội diệt chủng, và là lần đầu tiên tòa đưa ra kết luận này trong vụ kiện Gambia kiện Myanmar.',
@@ -471,6 +516,9 @@ const NEWS = [
 ];
 
 const SOURCES = [
+  ['Hormuz giảm hơn 40% — Al Jazeera, 24/11/2026','https://www.aljazeera.com/news/2026/11/24/hormuz-oil-traffic-is-down-40-percent-are-irans-tanker-attacks-working'],
+  ['Thêm 4 tàu bị tấn công ở Hormuz — gCaptain, 24/11/2026','https://gcaptain.com/four-more-ships-attacked-as-iran-widens-hormuz-crackdown-to-tugboats/'],
+  ['Just Security — Early Edition 24/11/2026','https://www.justsecurity.org/165763/early-edition-november-24-2026/'],
   ['Danh sách thành viên APEC — DFAT (Úc)','https://dfat.gov.au/trade/organisations/apec/asia-pacific-economic-cooperation-apec'],
   ['166 thành viên WTO — Fibre2Fashion (3/2026)','https://www.fibre2fashion.com/news/textile-news/total-number-of-tfa-ratifications-stands-at-162-out-of-166-wto-members-308764-newsdetails.htm'],
   ['BRICS 2026: 11 thành viên, 10 đối tác — Asian Mirror','https://www.asianmirror.us/?p=34925'],
@@ -492,7 +540,7 @@ const SOURCES = [
 ];
 
 /* Tên tiếng Việt cho các nước hay gặp (phần còn lại dùng tên tiếng Anh). */
-const VN = {'704':'Việt Nam','840':'Mỹ','156':'Trung Quốc','392':'Nhật Bản','410':'Hàn Quốc','408':'Triều Tiên','356':'Ấn Độ','643':'Nga','036':'Úc','554':'New Zealand','076':'Brazil','826':'Anh','276':'Đức','250':'Pháp','380':'Ý','724':'Tây Ban Nha','682':'Ả Rập Xê Út','710':'Nam Phi','764':'Thái Lan','418':'Lào','116':'Campuchia','104':'Myanmar','158':'Đài Loan','344':'Hồng Kông','446':'Ma Cao','702':'Singapore','458':'Malaysia','360':'Indonesia','608':'Philippines','096':'Brunei','626':'Timor-Leste','818':'Ai Cập','784':'UAE','792':'Thổ Nhĩ Kỳ','032':'Argentina','124':'Canada','484':'Mexico','152':'Chile','604':'Peru','804':'Ukraine','364':'Iran','376':'Israel','275':'Palestine','422':'Liban','887':'Yemen','729':'Sudan','728':'Nam Sudan','706':'Somalia','231':'Ethiopia','586':'Pakistan','004':'Afghanistan','566':'Nigeria','180':'CHDC Congo','616':'Ba Lan','112':'Belarus','398':'Kazakhstan','860':'Uzbekistan','192':'Cuba','068':'Bolivia','800':'Uganda','854':'Burkina Faso','466':'Mali','562':'Niger','332':'Haiti','598':'Papua New Guinea','304':'Greenland'};
+const VN = {'704':'Việt Nam','840':'Mỹ','156':'Trung Quốc','392':'Nhật Bản','410':'Hàn Quốc','408':'Triều Tiên','356':'Ấn Độ','643':'Nga','036':'Úc','554':'New Zealand','076':'Brazil','826':'Anh','276':'Đức','250':'Pháp','380':'Ý','724':'Tây Ban Nha','682':'Ả Rập Xê Út','710':'Nam Phi','764':'Thái Lan','418':'Lào','116':'Campuchia','104':'Myanmar','158':'Đài Loan','344':'Hồng Kông','446':'Ma Cao','702':'Singapore','458':'Malaysia','360':'Indonesia','608':'Philippines','096':'Brunei','626':'Timor-Leste','818':'Ai Cập','784':'UAE','792':'Thổ Nhĩ Kỳ','032':'Argentina','124':'Canada','484':'Mexico','152':'Chile','604':'Peru','804':'Ukraine','364':'Iran','376':'Israel','275':'Palestine','422':'Liban','887':'Yemen','729':'Sudan','728':'Nam Sudan','706':'Somalia','231':'Ethiopia','586':'Pakistan','004':'Afghanistan','566':'Nigeria','180':'CHDC Congo','616':'Ba Lan','112':'Belarus','398':'Kazakhstan','860':'Uzbekistan','192':'Cuba','068':'Bolivia','800':'Uganda','854':'Burkina Faso','466':'Mali','562':'Niger','332':'Haiti','434':'Libya','598':'Papua New Guinea','304':'Greenland'};
 
 /* ===================================================================== */
 const LEVEL = {critical:{c:'#A32D2D',r:11,t:'Rất nghiêm trọng'},high:{c:'#e34948',r:9,t:'Cao'},elevated:{c:'#eda100',r:7,t:'Đáng chú ý'},watch:{c:'#888780',r:6,t:'Theo dõi'}};

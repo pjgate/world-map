@@ -5,6 +5,9 @@ Quy ước số phiên bản `MAJOR.MINOR.PATCH`:
 - **MINOR** (1.**4**.0): thêm tính năng hoặc lớp thông tin mới.
 - **MAJOR** (**2**.0.0): thay đổi lớn về giao diện hoặc cấu trúc dữ liệu.
 
+## v1.4.5 — 25/11/2026
+- Cập nhật ngày: thêm 11 tin nổi bật 20–25/11 — lưu lượng tàu qua Hormuz giảm hơn 40%, thêm 4 tàu bị tấn công; Mỹ đưa Megaspeed và 6 công ty Đông Nam Á vào Entity List; Mỹ chuẩn bị tăng thuế với hàng Trung Quốc, EU; Trung Quốc tạm dừng lệnh cấm khoáng sản; Brent bật lại 91,4 USD; Houthi dọa cảng Jeddah sau khi liên quân Saudi đánh Hodeidah; Ukraine đánh chìm tàu Nga ngoài khơi Libya; Anh trừng phạt tướng Myanmar; Gaza. Cập nhật ghi chú eo Hormuz, Bab el-Mandeb và 5 xung đột.
+
 ## v1.4.4 — 22/11/2026
 - Cập nhật ngày: thêm 3 tin nổi bật 19/11 — ICJ kết luận Myanmar diệt chủng người Rohingya; bộ ba Trump–Tập–Putin ra tuyên bố hòa bình; Mỹ phong tỏa Iran (147 tàu bị chuyển hướng).
 
