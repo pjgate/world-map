@@ -26,4 +26,4 @@ Toàn bộ dữ liệu nằm ở đầu phần `<script>` trong `index.html`:
 | `ROUTES` | Tuyến vận tải (danh sách điểm `[kinh độ, vĩ độ]`) |
 | `SOURCES` | Nguồn tham khảo |
 
-Phiên bản hiện tại: **v1.4.5** — xem [CHANGELOG.md](CHANGELOG.md). Dữ liệu cập nhật ngày 25/11/2026. Các tuyến đường chỉ mang tính minh họa. Biên giới theo Natural Earth, không thể hiện quan điểm về chủ quyền.
+Phiên bản hiện tại: **v1.4.6** — xem [CHANGELOG.md](CHANGELOG.md). Dữ liệu cập nhật ngày 25/11/2026. Các tuyến đường chỉ mang tính minh họa. Biên giới theo Natural Earth, không thể hiện quan điểm về chủ quyền.

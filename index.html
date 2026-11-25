@@ -150,10 +150,11 @@ main{position:relative;overflow:hidden;background:var(--sea)}
    DỮ LIỆU — sửa ở đây khi cần cập nhật. Mã nước = mã số ISO 3166-1
    (ví dụ Việt Nam = "704"), trùng với id trong world-atlas.
    ===================================================================== */
-const VERSION = '1.4.5';
+const VERSION = '1.4.6';
 const UPDATED = '25/11/2026';
 /* Ghi chú phiên bản (mới nhất ở trên) — đồng bộ với CHANGELOG.md */
 const CHANGELOG = [
+  ['1.4.6','25/11/2026','Thêm tiêu chí theo dõi Jensen Huang, AI, Anthropic: Huang trở lại làm CEO Nvidia; IPO Anthropic lớn nhất lịch sử.'],
   ['1.4.5','25/11/2026','Cập nhật ngày: lưu lượng qua Hormuz giảm hơn 40%, Mỹ đưa 7 công ty Đông Nam Á vào danh sách đen chip, Houthi dọa cảng Jeddah, Ukraine đánh chìm tàu Nga ngoài khơi Libya.'],
   ['1.4.4','22/11/2026','Cập nhật ngày: Tòa án Công lý quốc tế kết luận Myanmar diệt chủng người Rohingya; bộ ba Trump–Tập–Putin ra tuyên bố hòa bình.'],
   ['1.4.3','20/11/2026','Cập nhật ngày: tên lửa Houthi nhắm Riyadh làm hư hại tòa PIF; JMIC nâng mức đe dọa Hormuz; lưu lượng dầu qua Hormuz giảm.'],
@@ -409,6 +410,14 @@ const CATS = {
   logistics:{c:'#1baf7a', t:'Logistics'}
 };
 const NEWS = [
+  {date:'2026-11-24', cat:'tech', score:4, at:[-122.4,37.78], countries:['840'],
+   title:'IPO Anthropic 81,3 tỷ USD, lớn nhất lịch sử, cổ phiếu xuống dưới giá chào bán',
+   note:'Thương vụ IPO 81,3 tỷ USD vượt kỷ lục 75 tỷ USD của SpaceX; Nvidia cam kết 10 tỷ USD. Sau khi mở cửa cao hơn nhiều so với giá 83 USD, ngày 24/11 cổ phiếu Anthropic có lúc xuống 81,40 USD.',
+   src:'https://www.fastcompany.com/91648273/ant-stock-is-down-why-anthropic-shares-dipped-below-ipo-price'},
+  {date:'2026-11-23', cat:'tech', score:4, at:[-121.96,37.37], countries:['840','156'],
+   title:'Jensen Huang trở lại làm CEO Nvidia sau 11 ngày',
+   note:'Hội đồng quản trị phục chức Huang dù SEC và Bộ Tư pháp Mỹ vẫn đang điều tra; Trump tuyên bố việc này không gây rủi ro an ninh quốc gia. Cùng ngày, Mỹ đưa Megaspeed vào danh sách đen xuất khẩu.',
+   src:'https://www.aljazeera.com/economy/2026/11/23/nvidia-board-reinstates-jensen-huang-as-ceo'},
   {date:'2026-11-25', cat:'logistics', score:4, at:[39.17,21.5], countries:['887','682'],
    title:'Houthi dọa tấn công Jeddah và mọi cảng Biển Đỏ của Saudi',
    note:'Houthi tuyên bố sẽ đánh Jeddah và các cảng Biển Đỏ khác nếu Saudi tấn công Hodeidah, kêu gọi hãng tàu rút tàu. Liên quân sau đó đánh các mục tiêu ở Hodeidah, Saada và Amran.',
