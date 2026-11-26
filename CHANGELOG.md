@@ -5,6 +5,11 @@ Quy ước số phiên bản `MAJOR.MINOR.PATCH`:
 - **MINOR** (1.**4**.0): thêm tính năng hoặc lớp thông tin mới.
 - **MAJOR** (**2**.0.0): thay đổi lớn về giao diện hoặc cấu trúc dữ liệu.
 
+## v1.4.8 — 25/11/2026
+
+- Thêm 4 tin ngày 25/11: Iran thêm 26 tàu (chủ yếu tàu kéo) vào danh sách vi phạm Hormuz; Houthi tuyên bố tấn công nhà máy Ras Tanura; Mỹ gác ý tưởng hợp tác kinh doanh với Nga (Reuters, chưa xác minh); Anthropic ra mắt Claude Ship.
+- Cập nhật xung đột Nga–Ukraine, Yemen và trạm Hormuz; 4 nguồn mới.
+
 ## v1.4.7 — 26/11/2026
 - Cập nhật ngày: thêm 3 tin nổi bật — bồi thẩm đoàn Mỹ kết tội Huawei (24/11); Iran cáo buộc Mỹ dùng Claude của Anthropic trong chiến dịch chống Iran (cáo buộc, chưa kiểm chứng); Nvidia ngừng giao chip Hopper có giấy phép sang Trung Quốc (18/11). Bỏ 4 tin cũ (Panama, Brent 17/11, hai tin Gaza). Houthi tấn công cảng Jizan và đánh chặn drone trên cảng Jeddah (25/11); thêm tàu dầu bị đạn gần Dubai (25/11) vào ghi chú eo Hormuz.
 

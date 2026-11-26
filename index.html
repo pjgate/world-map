@@ -150,10 +150,11 @@ main{position:relative;overflow:hidden;background:var(--sea)}
    DỮ LIỆU — sửa ở đây khi cần cập nhật. Mã nước = mã số ISO 3166-1
    (ví dụ Việt Nam = "704"), trùng với id trong world-atlas.
    ===================================================================== */
-const VERSION = '1.4.7';
-const UPDATED = '26/11/2026';
+const VERSION = '1.4.8';
+const UPDATED = '25/11/2026';
 /* Ghi chú phiên bản (mới nhất ở trên) — đồng bộ với CHANGELOG.md */
 const CHANGELOG = [
+  ['1.4.8','25/11/2026','Cập nhật ngày: Iran thêm 26 tàu (chủ yếu tàu kéo) vào danh sách vi phạm Hormuz; Houthi tuyên bố tấn công nhà máy Ras Tanura; Mỹ gác ý tưởng hợp tác kinh doanh với Nga; Anthropic ra mắt Claude Ship.'],
   ['1.4.7','26/11/2026','Cập nhật ngày: Houthi tấn công cảng Saudi trên Biển Đỏ; Huawei bị kết tội ở Mỹ; Nvidia ngừng giao chip Hopper cho Trung Quốc; tàu dầu bị đạn gần Dubai.'],
   ['1.4.6','25/11/2026','Thêm tiêu chí theo dõi Jensen Huang, AI, Anthropic: Huang trở lại làm CEO Nvidia; IPO Anthropic lớn nhất lịch sử.'],
   ['1.4.5','25/11/2026','Cập nhật ngày: lưu lượng qua Hormuz giảm hơn 40%, Mỹ đưa 7 công ty Đông Nam Á vào danh sách đen chip, Houthi dọa cảng Jeddah, Ukraine đánh chìm tàu Nga ngoài khơi Libya.'],
@@ -196,8 +197,8 @@ const BLOCS = {
 
 /* level: critical | high | elevated | watch ; status: 'active' | 'ceasefire' */
 const CONFLICTS = [
-  {name:'Nga – Ukraine', level:'critical', status:'active', changed:'2026-11-23', since:'02/2022', at:[37.5,48.2], countries:['804','643'], killed:64439,
-   note:'Xung đột đẫm máu nhất năm 2026, số người chết gấp hơn 13 lần bất kỳ cuộc chiến nào khác. Ngày 23/11 Ukraine dùng drone biển đánh chìm tàu hộ tống Nga Merkury gần Benghazi (Libya); đàm phán do Mỹ làm trung gian chưa có đột phá.'},
+  {name:'Nga – Ukraine', level:'critical', status:'active', changed:'2026-11-25', since:'02/2022', at:[37.5,48.2], countries:['804','643'], killed:64439,
+   note:'Xung đột đẫm máu nhất năm 2026, số người chết gấp hơn 13 lần bất kỳ cuộc chiến nào khác. Ngày 23/11 Ukraine dùng drone biển đánh chìm tàu hộ tống Nga Merkury gần Benghazi (Libya); đàm phán do Mỹ làm trung gian chưa có đột phá. Ngày 25/11 Reuters (dẫn FT, chưa được xác minh) đưa tin chính quyền Mỹ âm thầm gác đề xuất dùng hợp tác kinh doanh làm động lực để Nga chấm dứt chiến tranh.'},
   {name:'Iran – Israel / Mỹ', level:'critical', status:'active', changed:'2026-11-24', since:'28/02/2026', at:[54.5,28.5], countries:['364','376'], killed:3859,
    note:'Từ tháng 9 chủ yếu giao tranh trên biển; tháng 11 lan lại vào đất liền. Ngày 18/11 Iran tấn công Kuwait và Bahrain sau khi Mỹ đánh đảo Qeshm. Tuần 16–23/11 có khoảng 10 tàu dầu bị tấn công ở Hormuz; ngày 23/11 Iran tuyên bố sẽ dùng mọi công cụ chống phong tỏa hải quân của Mỹ.'},
   {name:'Israel – Gaza (Hamas)', level:'high', status:'ceasefire', changed:'2026-11-24', since:'10/2023', at:[34.4,31.45], countries:['376','275'], killed:1155,
@@ -205,7 +206,7 @@ const CONFLICTS = [
   {name:'Israel – Hezbollah (Liban)', level:'elevated', status:'ceasefire', since:'03/2026', at:[35.7,33.4], countries:['422','376'], killed:4593,
    note:'Bùng phát lại tháng 3/2026; ngừng bắn tạm thời từ 16/4 nhưng Israel vẫn không kích. Đàm phán bế tắc.'},
   {name:'Yemen / Biển Đỏ (Houthi)', level:'high', status:'active', changed:'2026-11-25', since:'07/2026 (lần này)', at:[44.5,15.5], countries:['887'], killed:4808,
-   note:'Giao tranh nổ ra lại tháng 7/2026 sau 4 năm đình chiến. Houthi đe dọa tàu qua Bab el-Mandeb và tấn công đường ống Đông–Tây của Ả Rập Xê Út. Ngày 20/11 liên quân do Saudi dẫn đầu không kích cảng Hodeidah; Houthi dọa đánh Jeddah và mọi cảng Biển Đỏ của Saudi. Ngày 25/11 Houthi tấn công cảng Jizan của Saudi (thiệt hại nhỏ theo liên quân) và liên quân nói đã đánh chặn drone trên cảng Jeddah.'},
+   note:'Giao tranh nổ ra lại tháng 7/2026 sau 4 năm đình chiến. Houthi đe dọa tàu qua Bab el-Mandeb và tấn công đường ống Đông–Tây của Ả Rập Xê Út. Ngày 20/11 liên quân do Saudi dẫn đầu không kích cảng Hodeidah; Houthi dọa đánh Jeddah và mọi cảng Biển Đỏ của Saudi. Ngày 25/11 Houthi tấn công cảng Jizan của Saudi (thiệt hại nhỏ theo liên quân) và liên quân nói đã đánh chặn drone trên cảng Jeddah. Cũng ngày 25/11 Houthi tuyên bố tấn công nhà máy lọc dầu Ras Tanura và khu tài chính Riyadh; Reuters, dẫn một nguồn tin, cho biết nhà máy đã bị tấn công.'},
   {name:'Nội chiến Sudan (SAF – RSF)', level:'high', status:'active', since:'04/2023', at:[30.0,13.3], countries:['729'], killed:3280,
    note:'Quân đội giành lại đất ở Kordofan. Hàng triệu người phải sơ tán, nạn đói nghiêm trọng.'},
   {name:'Somalia – al-Shabaab', level:'high', status:'active', since:'2006', at:[45.3,2.8], countries:['706'], killed:2915,
@@ -241,7 +242,7 @@ const CONFLICTS = [
 /* status: blocked | high | moderate | normal | watch | seasonal */
 const CHOKEPOINTS = [
   {name:'Eo Hormuz', at:[56.4,26.5], status:'blocked', changed:'2026-11-25',
-   note:'Bị Iran phong tỏa phần lớn từ 28/02/2026. Tàu đi theo hành lang có Mỹ hộ tống trung bình 38 lượt/ngày (19–21/11, theo JMIC), so với khoảng 138 lượt/ngày năm 2025. Số tàu ra vào vùng Vịnh 17–23/11 giảm hơn 40% so với đầu tháng; khoảng 218 tàu nằm chờ phía đông eo biển. JMIC giữ mức đe dọa "nghiêm trọng"; IMO ghi nhận 141 vụ việc, 25 thuyền viên thiệt mạng (23/11). Ngày 25/11 UKMTO báo một tàu dầu bị vật thể không rõ nguồn gốc phát nổ gần, cách Dubai khoảng 50 hải lý về phía tây, không có thiệt hại hay thương vong.'},
+   note:'Bị Iran phong tỏa phần lớn từ 28/02/2026. Tàu đi theo hành lang có Mỹ hộ tống trung bình 38 lượt/ngày (19–21/11, theo JMIC), so với khoảng 138 lượt/ngày năm 2025. Số tàu ra vào vùng Vịnh 17–23/11 giảm hơn 40% so với đầu tháng; khoảng 218 tàu nằm chờ phía đông eo biển. JMIC giữ mức đe dọa "nghiêm trọng"; IMO ghi nhận 141 vụ việc, 25 thuyền viên thiệt mạng (23/11). Ngày 25/11 Iran thêm 26 tàu, chủ yếu tàu kéo, vào danh sách không tuân thủ (tổng 266 tàu đi qua không có phép của Tehran). Ngày 25/11 UKMTO báo một tàu dầu bị vật thể không rõ nguồn gốc phát nổ gần, cách Dubai khoảng 50 hải lý về phía tây, không có thiệt hại hay thương vong.'},
   {name:'Eo Bab el-Mandeb', at:[43.4,12.6], status:'high', changed:'2026-11-25',
    note:'Houthi đe dọa và tấn công trở lại. Ngày 17/11/2026 có 44 lượt tàu đi qua. Sau khi liên quân Saudi đánh cảng Hodeidah, Houthi kêu gọi hãng tàu rút khỏi các cảng Biển Đỏ của Saudi và dọa tấn công Jeddah.'},
   {name:'Kênh đào Suez', at:[32.35,30.6], status:'moderate',
@@ -411,6 +412,22 @@ const CATS = {
   logistics:{c:'#1baf7a', t:'Logistics'}
 };
 const NEWS = [
+  {date:'2026-11-25', cat:'logistics', score:4, at:[56.4,26.5], countries:['364'],
+   title:'Iran đưa thêm 26 tàu, chủ yếu tàu kéo, vào danh sách vi phạm Hormuz',
+   note:'Cơ quan Eo biển Vịnh Ba Tư của Iran thêm 26 tàu, chủ yếu tàu kéo, vào danh sách không tuân thủ, nâng tổng lên 266 tàu đi qua eo biển mà không có phép của Tehran. IMO cho biết một số tàu kéo trong khu vực đã bị hư hại gần đây.',
+   src:'https://www.insurancejournal.com/news/international/2026/11/25/893726.htm'},
+  {date:'2026-11-25', cat:'conflict', score:4, at:[50.16,26.64], countries:['682','887'],
+   title:'Houthi tuyên bố tấn công nhà máy lọc dầu Ras Tanura và khu tài chính Riyadh',
+   note:'Houthi tuyên bố tấn công nhà máy Ras Tanura của Saudi và khu tài chính Riyadh; Reuters, dẫn một nguồn tin, cho biết nhà máy đã bị tấn công, còn chính phủ Saudi và Aramco chưa phản hồi. Giá Brent tăng hơn 3% trong phiên 25/11.',
+   src:'https://www.nationthailand.com/news/world/40073934'},
+  {date:'2026-11-25', cat:'tech', score:3, at:[-122.4,37.78], countries:['840'],
+   title:'Anthropic ra mắt Claude Ship, tác nhân rà soát và phê duyệt mã',
+   note:'Claude Ship gồm các tác nhân rà soát và phê duyệt thay đổi mã theo quy tắc nhóm đặt ra, dùng cho kho GitHub trong gói Claude Team và Enterprise; PR Steward và Claude Approvals đang thử nghiệm beta. Anthropic cho biết số thay đổi được gộp tăng hơn gấp đôi từ tháng 6 đến tháng 9.',
+   src:'https://dataconomy.com/2026/11/25/anthropic-launches-claude-ship-for-ai-code-reviews-and'},
+  {date:'2026-11-25', cat:'conflict', score:3, at:[-77.04,38.9], countries:['840','643','804'],
+   title:'Mỹ gác kế hoạch dùng hợp tác kinh doanh làm động lực với Nga',
+   note:'Theo Reuters (dẫn FT, chưa được xác minh), chính quyền Trump âm thầm gác đề xuất dùng hợp tác năng lượng và hàng không làm động lực để Nga ngừng chiến, sau khi Moscow ít quan tâm; Nga vẫn đòi Ukraine nhượng lãnh thổ.',
+   src:'https://www.business-standard.com/world-news/us-shelves-plans-for-business-deals-with-russia-to-end-ukraine-war-report-126112500309_1.html'},
   {date:'2026-11-24', cat:'trade', score:4, at:[-77.04,38.9], countries:['156','364','840'],
    title:'Bồi thẩm đoàn Mỹ kết tội Huawei trong 10/12 cáo buộc, gồm làm ăn với Iran',
    note:'Huawei bị kết tội theo 10 trên 12 cáo buộc, trong đó có giao dịch với Iran; bản án dự kiến tuyên vào tháng 9 năm sau.',
@@ -522,6 +539,10 @@ const NEWS = [
 ];
 
 const SOURCES = [
+  ['Iran thêm 26 tàu vào danh sách vi phạm Hormuz — Insurance Journal (Bloomberg), 25/11/2026','https://www.insurancejournal.com/news/international/2026/11/25/893726.htm'],
+  ['Houthi tuyên bố tấn công Ras Tanura; Brent tăng — The Nation, 25/11/2026','https://www.nationthailand.com/news/world/40073934'],
+  ['Anthropic ra mắt Claude Ship — Dataconomy, 25/11/2026','https://dataconomy.com/2026/11/25/anthropic-launches-claude-ship-for-ai-code-reviews-and'],
+  ['Mỹ gác kế hoạch hợp tác kinh doanh với Nga — Business Standard (Reuters), 25/11/2026','https://www.business-standard.com/world-news/us-shelves-plans-for-business-deals-with-russia-to-end-ukraine-war-report-126112500309_1.html'],
   ['Houthi tấn công cảng Saudi trên Biển Đỏ — Al Jazeera, 25/11/2026','https://www.aljazeera.com/news/2026/11/25/houthis-target-saudi-arabias-red-sea-ports-as-strikes-escalate'],
   ['Huawei bị kết tội; Iran cáo buộc dùng Claude — CBS News (AP), 24–25/11/2026','https://www.cbsnews.com/live-updates/iran-war-us-military-ai-weapons-oil/'],
   ['Nvidia ngừng giao chip Hopper sang Trung Quốc — Fox Business, 18/11/2026','https://www.foxbusiness.com/fox-news-tech/nvidia-halts-china-ai-chip-shipments-despite-us-approval'],
