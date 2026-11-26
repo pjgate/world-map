@@ -150,10 +150,11 @@ main{position:relative;overflow:hidden;background:var(--sea)}
    DỮ LIỆU — sửa ở đây khi cần cập nhật. Mã nước = mã số ISO 3166-1
    (ví dụ Việt Nam = "704"), trùng với id trong world-atlas.
    ===================================================================== */
-const VERSION = '1.4.6';
-const UPDATED = '25/11/2026';
+const VERSION = '1.4.7';
+const UPDATED = '26/11/2026';
 /* Ghi chú phiên bản (mới nhất ở trên) — đồng bộ với CHANGELOG.md */
 const CHANGELOG = [
+  ['1.4.7','26/11/2026','Cập nhật ngày: Houthi tấn công cảng Saudi trên Biển Đỏ; Huawei bị kết tội ở Mỹ; Nvidia ngừng giao chip Hopper cho Trung Quốc; tàu dầu bị đạn gần Dubai.'],
   ['1.4.6','25/11/2026','Thêm tiêu chí theo dõi Jensen Huang, AI, Anthropic: Huang trở lại làm CEO Nvidia; IPO Anthropic lớn nhất lịch sử.'],
   ['1.4.5','25/11/2026','Cập nhật ngày: lưu lượng qua Hormuz giảm hơn 40%, Mỹ đưa 7 công ty Đông Nam Á vào danh sách đen chip, Houthi dọa cảng Jeddah, Ukraine đánh chìm tàu Nga ngoài khơi Libya.'],
   ['1.4.4','22/11/2026','Cập nhật ngày: Tòa án Công lý quốc tế kết luận Myanmar diệt chủng người Rohingya; bộ ba Trump–Tập–Putin ra tuyên bố hòa bình.'],
@@ -204,7 +205,7 @@ const CONFLICTS = [
   {name:'Israel – Hezbollah (Liban)', level:'elevated', status:'ceasefire', since:'03/2026', at:[35.7,33.4], countries:['422','376'], killed:4593,
    note:'Bùng phát lại tháng 3/2026; ngừng bắn tạm thời từ 16/4 nhưng Israel vẫn không kích. Đàm phán bế tắc.'},
   {name:'Yemen / Biển Đỏ (Houthi)', level:'high', status:'active', changed:'2026-11-25', since:'07/2026 (lần này)', at:[44.5,15.5], countries:['887'], killed:4808,
-   note:'Giao tranh nổ ra lại tháng 7/2026 sau 4 năm đình chiến. Houthi đe dọa tàu qua Bab el-Mandeb và tấn công đường ống Đông–Tây của Ả Rập Xê Út. Ngày 20/11 liên quân do Saudi dẫn đầu không kích cảng Hodeidah; Houthi dọa đánh Jeddah và mọi cảng Biển Đỏ của Saudi.'},
+   note:'Giao tranh nổ ra lại tháng 7/2026 sau 4 năm đình chiến. Houthi đe dọa tàu qua Bab el-Mandeb và tấn công đường ống Đông–Tây của Ả Rập Xê Út. Ngày 20/11 liên quân do Saudi dẫn đầu không kích cảng Hodeidah; Houthi dọa đánh Jeddah và mọi cảng Biển Đỏ của Saudi. Ngày 25/11 Houthi tấn công cảng Jizan của Saudi (thiệt hại nhỏ theo liên quân) và liên quân nói đã đánh chặn drone trên cảng Jeddah.'},
   {name:'Nội chiến Sudan (SAF – RSF)', level:'high', status:'active', since:'04/2023', at:[30.0,13.3], countries:['729'], killed:3280,
    note:'Quân đội giành lại đất ở Kordofan. Hàng triệu người phải sơ tán, nạn đói nghiêm trọng.'},
   {name:'Somalia – al-Shabaab', level:'high', status:'active', since:'2006', at:[45.3,2.8], countries:['706'], killed:2915,
@@ -239,8 +240,8 @@ const CONFLICTS = [
 
 /* status: blocked | high | moderate | normal | watch | seasonal */
 const CHOKEPOINTS = [
-  {name:'Eo Hormuz', at:[56.4,26.5], status:'blocked', changed:'2026-11-24',
-   note:'Bị Iran phong tỏa phần lớn từ 28/02/2026. Tàu đi theo hành lang có Mỹ hộ tống trung bình 38 lượt/ngày (19–21/11, theo JMIC), so với khoảng 138 lượt/ngày năm 2025. Số tàu ra vào vùng Vịnh 17–23/11 giảm hơn 40% so với đầu tháng; khoảng 218 tàu nằm chờ phía đông eo biển. JMIC giữ mức đe dọa "nghiêm trọng"; IMO ghi nhận 141 vụ việc, 25 thuyền viên thiệt mạng (23/11).'},
+  {name:'Eo Hormuz', at:[56.4,26.5], status:'blocked', changed:'2026-11-25',
+   note:'Bị Iran phong tỏa phần lớn từ 28/02/2026. Tàu đi theo hành lang có Mỹ hộ tống trung bình 38 lượt/ngày (19–21/11, theo JMIC), so với khoảng 138 lượt/ngày năm 2025. Số tàu ra vào vùng Vịnh 17–23/11 giảm hơn 40% so với đầu tháng; khoảng 218 tàu nằm chờ phía đông eo biển. JMIC giữ mức đe dọa "nghiêm trọng"; IMO ghi nhận 141 vụ việc, 25 thuyền viên thiệt mạng (23/11). Ngày 25/11 UKMTO báo một tàu dầu bị vật thể không rõ nguồn gốc phát nổ gần, cách Dubai khoảng 50 hải lý về phía tây, không có thiệt hại hay thương vong.'},
   {name:'Eo Bab el-Mandeb', at:[43.4,12.6], status:'high', changed:'2026-11-25',
    note:'Houthi đe dọa và tấn công trở lại. Ngày 17/11/2026 có 44 lượt tàu đi qua. Sau khi liên quân Saudi đánh cảng Hodeidah, Houthi kêu gọi hãng tàu rút khỏi các cảng Biển Đỏ của Saudi và dọa tấn công Jeddah.'},
   {name:'Kênh đào Suez', at:[32.35,30.6], status:'moderate',
@@ -410,6 +411,18 @@ const CATS = {
   logistics:{c:'#1baf7a', t:'Logistics'}
 };
 const NEWS = [
+  {date:'2026-11-24', cat:'trade', score:4, at:[-77.04,38.9], countries:['156','364','840'],
+   title:'Bồi thẩm đoàn Mỹ kết tội Huawei trong 10/12 cáo buộc, gồm làm ăn với Iran',
+   note:'Huawei bị kết tội theo 10 trên 12 cáo buộc, trong đó có giao dịch với Iran; bản án dự kiến tuyên vào tháng 9 năm sau.',
+   src:'https://www.cbsnews.com/live-updates/iran-war-us-military-ai-weapons-oil/'},
+  {date:'2026-11-24', cat:'tech', score:3, at:[-73.97,40.75], countries:['364','840'],
+   title:'Iran cáo buộc Mỹ dùng Claude của Anthropic trong chiến dịch chống Iran',
+   note:'Đại sứ Iran tại LHQ cáo buộc Mỹ dùng hệ thống Maven của Palantir và Claude của Anthropic để phân tích tình báo và chọn mục tiêu, và nói đây là vi phạm luật quốc tế. CBS nêu đây là cáo buộc của Iran, chưa được kiểm chứng.',
+   src:'https://www.cbsnews.com/live-updates/iran-war-us-military-ai-weapons-oil/'},
+  {date:'2026-11-18', cat:'tech', score:4, at:[-121.96,37.37], countries:['840','156'],
+   title:'Nvidia ngừng giao chip AI Hopper có giấy phép sang Trung Quốc',
+   note:'Nvidia cho biết đã ngừng giao sản phẩm Hopper có giấy phép cho Trung Quốc dù Mỹ đã cấp phép; dự báo doanh thu quý tới (khoảng 130 tỷ USD ±3%) loại trừ doanh số chip bán sang Trung Quốc. Nvidia không nói lý do.',
+   src:'https://www.foxbusiness.com/fox-news-tech/nvidia-halts-china-ai-chip-shipments-despite-us-approval'},
   {date:'2026-11-24', cat:'tech', score:4, at:[-122.4,37.78], countries:['840'],
    title:'IPO Anthropic 81,3 tỷ USD, lớn nhất lịch sử, cổ phiếu xuống dưới giá chào bán',
    note:'Thương vụ IPO 81,3 tỷ USD vượt kỷ lục 75 tỷ USD của SpaceX; Nvidia cam kết 10 tỷ USD. Sau khi mở cửa cao hơn nhiều so với giá 83 USD, ngày 24/11 cổ phiếu Anthropic có lúc xuống 81,40 USD.',
@@ -438,10 +451,6 @@ const NEWS = [
    title:'Trung Quốc tạm dừng lệnh cấm khoáng sản thiết yếu để giữ đình chiến với Mỹ',
    note:'Theo Bloomberg, Bắc Kinh chọn chưa trả đũa sau vụ chip Nvidia, giữ thỏa thuận đình chiến thương mại với Washington.',
    src:'https://www.bloomberg.com/news/articles/2026-11-24/china-halts-critical-minerals-ban-to-maintain-truce-with-us'},
-  {date:'2026-11-24', cat:'conflict', score:3, at:[34.45,31.5], countries:['376','275'],
-   title:'Israel không kích giết giám đốc an ninh nội bộ của Hamas',
-   note:'Naeem Abu Nahel và 6 người khác thiệt mạng; một ngày trước, một nhân viên UNRWA bị giết ở trại Jabalia. Ngừng bắn từ 10/2025 tiếp tục bị thử thách.',
-   src:'https://www.justsecurity.org/165763/early-edition-november-24-2026/'},
   {date:'2026-11-23', cat:'tech', score:5, at:[103.8,1.35], countries:['840','702','458','764','156'],
    title:'Mỹ đưa Megaspeed và 6 công ty Đông Nam Á vào danh sách đen xuất khẩu',
    note:'BIS đưa 7 công ty (3 ở Malaysia, 2 ở Singapore, 1 ở Thái Lan) vào Entity List; xuất chip Nvidia cao cấp cho họ cần giấy phép. Malaysia sẽ yêu cầu trung tâm dữ liệu không phục vụ các công ty này.',
@@ -498,18 +507,10 @@ const NEWS = [
    title:'Iran tấn công Kuwait và Bahrain',
    note:'Iran nhắm vào căn cứ Ali Al Salem (Kuwait), nơi có quân Mỹ, sau khi Mỹ đánh đảo Qeshm trong eo Hormuz.',
    src:'https://justsecurity.org/165038/early-edition-november-18-2026'},
-  {date:'2026-11-18', cat:'conflict', score:4, at:[34.35,31.4], countries:['376','275'],
-   title:'Israel tuyên bố tấn công mới ở miền trung Gaza',
-   note:'Thỏa thuận ngừng bắn từ tháng 10/2025 lung lay; "Hội đồng Hòa bình" cáo buộc cả Israel và Hamas không thực hiện cam kết.',
-   src:'https://blackwing.im/blog/how-many-wars-are-there-in-the-world'},
   {date:'2026-11-17', cat:'energy', score:4, at:[46.7,24.7], countries:['682','887'],
    title:'Houthi phóng drone vào đường ống dầu Đông–Tây của Ả Rập Xê Út',
    note:'Năm drone nhắm vào hai trạm bơm ở khu vực Riyadh. Đây là tuyến ống giúp Ả Rập Xê Út xuất dầu né eo Hormuz.',
    src:'https://justsecurity.org/165038/early-edition-november-18-2026'},
-  {date:'2026-11-17', cat:'energy', score:3, at:[58.2,24.8],
-   title:'Giá dầu Brent quanh 92–93 USD/thùng',
-   note:'Tấn công tàu chở dầu ở Hormuz đẩy giá lên, nhưng sản lượng Trung Đông tăng và IEA dự báo dư cung kéo giá xuống.',
-   src:'https://engine.online/news/brent-declines-as-supply-shortage-concerns-ease-8431'},
   {date:'2026-11-16', cat:'tech', score:5, at:[104.0,3.5], countries:['156','458','764','360','702','076'],
    title:'Mỹ siết chip AI: chặn Trung Quốc truy cập từ xa qua Đông Nam Á',
    note:'Bộ Thương mại Mỹ (BIS) yêu cầu giấy phép xuất khẩu chip AI sang Malaysia, Thái Lan, Indonesia, Singapore và Brazil, nhằm chặn doanh nghiệp Trung Quốc thuê trung tâm dữ liệu ở nước thứ ba. Bắc Kinh gọi đây là "cưỡng ép kinh tế".',
@@ -518,13 +519,13 @@ const NEWS = [
    title:'Jensen Huang từ chức CEO Nvidia',
    note:'Từ chức giữa bê bối liên quan một công ty trung tâm dữ liệu ở Singapore. Vụ việc khiến Washington chuyển sang hướng siết xuất khẩu chip.',
    src:'https://bravenewcoin.com/insights/nvidia-ai-chip-restrictions-expand-as-us-closes-cloud-computing-loophole-for-china'},
-  {date:'2026-11-11', cat:'logistics', score:3, at:[-79.7,9.1], countries:['591'],
-   title:'Kênh Panama nâng lên 34 lượt tàu/ngày',
-   note:'Mực nước cải thiện, nới mớn nước tối đa ở âu tàu Neopanamax.',
-   src:'https://www.ajot.com/news/panama-canal-increases-daily-transits-to-34-and-raises-maximum-allowable-draft-at-neopanamax-locks'}
 ];
 
 const SOURCES = [
+  ['Houthi tấn công cảng Saudi trên Biển Đỏ — Al Jazeera, 25/11/2026','https://www.aljazeera.com/news/2026/11/25/houthis-target-saudi-arabias-red-sea-ports-as-strikes-escalate'],
+  ['Huawei bị kết tội; Iran cáo buộc dùng Claude — CBS News (AP), 24–25/11/2026','https://www.cbsnews.com/live-updates/iran-war-us-military-ai-weapons-oil/'],
+  ['Nvidia ngừng giao chip Hopper sang Trung Quốc — Fox Business, 18/11/2026','https://www.foxbusiness.com/fox-news-tech/nvidia-halts-china-ai-chip-shipments-despite-us-approval'],
+  ['Tàu dầu bị đạn gần Dubai, 25/11/2026 — investingLive (dẫn UKMTO)','https://investinglive.com/commodities/projectile-explodes-near-tanker-50-nautical-miles-off-dubai-as-gulf-shipping-attacks-mount'],
   ['Hormuz giảm hơn 40% — Al Jazeera, 24/11/2026','https://www.aljazeera.com/news/2026/11/24/hormuz-oil-traffic-is-down-40-percent-are-irans-tanker-attacks-working'],
   ['Thêm 4 tàu bị tấn công ở Hormuz — gCaptain, 24/11/2026','https://gcaptain.com/four-more-ships-attacked-as-iran-widens-hormuz-crackdown-to-tugboats/'],
   ['Just Security — Early Edition 24/11/2026','https://www.justsecurity.org/165763/early-edition-november-24-2026/'],

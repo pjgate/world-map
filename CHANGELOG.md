@@ -5,6 +5,9 @@ Quy ước số phiên bản `MAJOR.MINOR.PATCH`:
 - **MINOR** (1.**4**.0): thêm tính năng hoặc lớp thông tin mới.
 - **MAJOR** (**2**.0.0): thay đổi lớn về giao diện hoặc cấu trúc dữ liệu.
 
+## v1.4.7 — 26/11/2026
+- Cập nhật ngày: thêm 3 tin nổi bật — bồi thẩm đoàn Mỹ kết tội Huawei (24/11); Iran cáo buộc Mỹ dùng Claude của Anthropic trong chiến dịch chống Iran (cáo buộc, chưa kiểm chứng); Nvidia ngừng giao chip Hopper có giấy phép sang Trung Quốc (18/11). Bỏ 4 tin cũ (Panama, Brent 17/11, hai tin Gaza). Houthi tấn công cảng Jizan và đánh chặn drone trên cảng Jeddah (25/11); thêm tàu dầu bị đạn gần Dubai (25/11) vào ghi chú eo Hormuz.
+
 ## v1.4.6 — 25/11/2026
 - Thêm tiêu chí theo dõi tin Jensen Huang, AI, Anthropic. Thêm 2 tin: Huang trở lại làm CEO Nvidia (23/11); IPO Anthropic 81,3 tỷ USD, cổ phiếu xuống dưới giá chào bán (24/11).
 
