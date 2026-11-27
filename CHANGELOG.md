@@ -5,6 +5,11 @@ Quy ước số phiên bản `MAJOR.MINOR.PATCH`:
 - **MINOR** (1.**4**.0): thêm tính năng hoặc lớp thông tin mới.
 - **MAJOR** (**2**.0.0): thay đổi lớn về giao diện hoặc cấu trúc dữ liệu.
 
+## v1.4.9 — 27/11/2026
+
+- Thêm 5 tin trong khung 26/11 (07:30) – 27/11 (07:30) GMT+7: Houthi tấn công nhà máy lọc dầu Jazan của Saudi (26/11); Iran tuyên bố tàu trúng thủy lôi ở Hormuz (26/11); drone Iran giết hai công dân Ý ở Kuwait (26/11); Quốc hội Mỹ tiến tới siết kiểm soát thiết bị chip (26/11); Trump đe dọa thuế 40% với Trung Quốc (27/11 GMT+7).
+- Cập nhật xung đột Gaza, Iran – Israel/Mỹ, Yemen; trạm Hormuz; 5 nguồn mới.
+
 ## v1.4.8 — 25/11/2026
 
 - Thêm 4 tin ngày 25/11: Iran thêm 26 tàu (chủ yếu tàu kéo) vào danh sách vi phạm Hormuz; Houthi tuyên bố tấn công nhà máy Ras Tanura; Mỹ gác ý tưởng hợp tác kinh doanh với Nga (Reuters, chưa xác minh); Anthropic ra mắt Claude Ship.

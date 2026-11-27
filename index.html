@@ -150,10 +150,11 @@ main{position:relative;overflow:hidden;background:var(--sea)}
    DỮ LIỆU — sửa ở đây khi cần cập nhật. Mã nước = mã số ISO 3166-1
    (ví dụ Việt Nam = "704"), trùng với id trong world-atlas.
    ===================================================================== */
-const VERSION = '1.4.8';
-const UPDATED = '25/11/2026';
+const VERSION = '1.4.9';
+const UPDATED = '27/11/2026';
 /* Ghi chú phiên bản (mới nhất ở trên) — đồng bộ với CHANGELOG.md */
 const CHANGELOG = [
+  ['1.4.9','27/11/2026','Cập nhật ngày: Houthi tấn công nhà máy lọc dầu Jazan của Saudi; Iran tuyên bố tàu trúng thủy lôi ở Hormuz; drone Iran giết hai công nhân Ý ở Kuwait; Trump dọa thuế 40% với Trung Quốc; Quốc hội Mỹ siết kiểm soát thiết bị chip.'],
   ['1.4.8','25/11/2026','Cập nhật ngày: Iran thêm 26 tàu (chủ yếu tàu kéo) vào danh sách vi phạm Hormuz; Houthi tuyên bố tấn công nhà máy Ras Tanura; Mỹ gác ý tưởng hợp tác kinh doanh với Nga; Anthropic ra mắt Claude Ship.'],
   ['1.4.7','26/11/2026','Cập nhật ngày: Houthi tấn công cảng Saudi trên Biển Đỏ; Huawei bị kết tội ở Mỹ; Nvidia ngừng giao chip Hopper cho Trung Quốc; tàu dầu bị đạn gần Dubai.'],
   ['1.4.6','25/11/2026','Thêm tiêu chí theo dõi Jensen Huang, AI, Anthropic: Huang trở lại làm CEO Nvidia; IPO Anthropic lớn nhất lịch sử.'],
@@ -199,14 +200,14 @@ const BLOCS = {
 const CONFLICTS = [
   {name:'Nga – Ukraine', level:'critical', status:'active', changed:'2026-11-25', since:'02/2022', at:[37.5,48.2], countries:['804','643'], killed:64439,
    note:'Xung đột đẫm máu nhất năm 2026, số người chết gấp hơn 13 lần bất kỳ cuộc chiến nào khác. Ngày 23/11 Ukraine dùng drone biển đánh chìm tàu hộ tống Nga Merkury gần Benghazi (Libya); đàm phán do Mỹ làm trung gian chưa có đột phá. Ngày 25/11 Reuters (dẫn FT, chưa được xác minh) đưa tin chính quyền Mỹ âm thầm gác đề xuất dùng hợp tác kinh doanh làm động lực để Nga chấm dứt chiến tranh.'},
-  {name:'Iran – Israel / Mỹ', level:'critical', status:'active', changed:'2026-11-24', since:'28/02/2026', at:[54.5,28.5], countries:['364','376'], killed:3859,
-   note:'Từ tháng 9 chủ yếu giao tranh trên biển; tháng 11 lan lại vào đất liền. Ngày 18/11 Iran tấn công Kuwait và Bahrain sau khi Mỹ đánh đảo Qeshm. Tuần 16–23/11 có khoảng 10 tàu dầu bị tấn công ở Hormuz; ngày 23/11 Iran tuyên bố sẽ dùng mọi công cụ chống phong tỏa hải quân của Mỹ.'},
-  {name:'Israel – Gaza (Hamas)', level:'high', status:'ceasefire', changed:'2026-11-24', since:'10/2023', at:[34.4,31.45], countries:['376','275'], killed:1155,
-   note:'Ngừng bắn từ tháng 10/2025 nhưng Israel vẫn không kích: ngày 18/11 tuyên bố đợt tấn công mới ở miền trung Gaza, ngày 24/11 giết giám đốc an ninh nội bộ của Hamas. Theo Al Jazeera, ít nhất 1.679 người Palestine thiệt mạng kể từ khi ngừng bắn.'},
+  {name:'Iran – Israel / Mỹ', level:'critical', status:'active', changed:'2026-11-26', since:'28/02/2026', at:[54.5,28.5], countries:['364','376'], killed:3859,
+   note:'Từ tháng 9 chủ yếu giao tranh trên biển; tháng 11 lan lại vào đất liền. Ngày 18/11 Iran tấn công Kuwait và Bahrain sau khi Mỹ đánh đảo Qeshm. Tuần 16–23/11 có khoảng 10 tàu dầu bị tấn công ở Hormuz; ngày 23/11 Iran tuyên bố sẽ dùng mọi công cụ chống phong tỏa hải quân của Mỹ. Ngày 26/11 drone Iran tấn công Kuwait làm hai công dân Ý làm việc cho Rheinmetall thiệt mạng (theo Bloomberg dẫn ANSA).'},
+  {name:'Israel – Gaza (Hamas)', level:'high', status:'ceasefire', changed:'2026-11-26', since:'10/2023', at:[34.4,31.45], countries:['376','275'], killed:1155,
+   note:'Ngừng bắn từ tháng 10/2025 nhưng Israel vẫn không kích: ngày 18/11 tuyên bố đợt tấn công mới ở miền trung Gaza, ngày 24/11 giết giám đốc an ninh nội bộ của Hamas. Theo Al Jazeera, ít nhất 1.679 người Palestine thiệt mạng kể từ khi ngừng bắn. Ngày 26/11 không kích Israel làm 10 người chết theo quan chức bệnh viện Palestine (Local10).'},
   {name:'Israel – Hezbollah (Liban)', level:'elevated', status:'ceasefire', since:'03/2026', at:[35.7,33.4], countries:['422','376'], killed:4593,
    note:'Bùng phát lại tháng 3/2026; ngừng bắn tạm thời từ 16/4 nhưng Israel vẫn không kích. Đàm phán bế tắc.'},
-  {name:'Yemen / Biển Đỏ (Houthi)', level:'high', status:'active', changed:'2026-11-25', since:'07/2026 (lần này)', at:[44.5,15.5], countries:['887'], killed:4808,
-   note:'Giao tranh nổ ra lại tháng 7/2026 sau 4 năm đình chiến. Houthi đe dọa tàu qua Bab el-Mandeb và tấn công đường ống Đông–Tây của Ả Rập Xê Út. Ngày 20/11 liên quân do Saudi dẫn đầu không kích cảng Hodeidah; Houthi dọa đánh Jeddah và mọi cảng Biển Đỏ của Saudi. Ngày 25/11 Houthi tấn công cảng Jizan của Saudi (thiệt hại nhỏ theo liên quân) và liên quân nói đã đánh chặn drone trên cảng Jeddah. Cũng ngày 25/11 Houthi tuyên bố tấn công nhà máy lọc dầu Ras Tanura và khu tài chính Riyadh; Reuters, dẫn một nguồn tin, cho biết nhà máy đã bị tấn công.'},
+  {name:'Yemen / Biển Đỏ (Houthi)', level:'high', status:'active', changed:'2026-11-26', since:'07/2026 (lần này)', at:[44.5,15.5], countries:['887'], killed:4808,
+   note:'Giao tranh nổ ra lại tháng 7/2026 sau 4 năm đình chiến. Houthi đe dọa tàu qua Bab el-Mandeb và tấn công đường ống Đông–Tây của Ả Rập Xê Út. Ngày 20/11 liên quân do Saudi dẫn đầu không kích cảng Hodeidah; Houthi dọa đánh Jeddah và mọi cảng Biển Đỏ của Saudi. Ngày 25/11 Houthi tấn công cảng Jizan của Saudi (thiệt hại nhỏ theo liên quân) và liên quân nói đã đánh chặn drone trên cảng Jeddah. Ngày 26/11 Houthi tấn công nhà máy lọc dầu Jazan (400.000 thùng/ngày) trên bờ Biển Đỏ, làm gián đoạn một phần hoạt động theo Saudi Press Agency dẫn nguồn Bộ Năng lượng. Cũng ngày 25/11 Houthi tuyên bố tấn công nhà máy lọc dầu Ras Tanura và khu tài chính Riyadh; Reuters, dẫn một nguồn tin, cho biết nhà máy đã bị tấn công.'},
   {name:'Nội chiến Sudan (SAF – RSF)', level:'high', status:'active', since:'04/2023', at:[30.0,13.3], countries:['729'], killed:3280,
    note:'Quân đội giành lại đất ở Kordofan. Hàng triệu người phải sơ tán, nạn đói nghiêm trọng.'},
   {name:'Somalia – al-Shabaab', level:'high', status:'active', since:'2006', at:[45.3,2.8], countries:['706'], killed:2915,
@@ -241,8 +242,8 @@ const CONFLICTS = [
 
 /* status: blocked | high | moderate | normal | watch | seasonal */
 const CHOKEPOINTS = [
-  {name:'Eo Hormuz', at:[56.4,26.5], status:'blocked', changed:'2026-11-25',
-   note:'Bị Iran phong tỏa phần lớn từ 28/02/2026. Tàu đi theo hành lang có Mỹ hộ tống trung bình 38 lượt/ngày (19–21/11, theo JMIC), so với khoảng 138 lượt/ngày năm 2025. Số tàu ra vào vùng Vịnh 17–23/11 giảm hơn 40% so với đầu tháng; khoảng 218 tàu nằm chờ phía đông eo biển. JMIC giữ mức đe dọa "nghiêm trọng"; IMO ghi nhận 141 vụ việc, 25 thuyền viên thiệt mạng (23/11). Ngày 25/11 Iran thêm 26 tàu, chủ yếu tàu kéo, vào danh sách không tuân thủ (tổng 266 tàu đi qua không có phép của Tehran). Ngày 25/11 UKMTO báo một tàu dầu bị vật thể không rõ nguồn gốc phát nổ gần, cách Dubai khoảng 50 hải lý về phía tây, không có thiệt hại hay thương vong.'},
+  {name:'Eo Hormuz', at:[56.4,26.5], status:'blocked', changed:'2026-11-26',
+   note:'Bị Iran phong tỏa phần lớn từ 28/02/2026. Tàu đi theo hành lang có Mỹ hộ tống trung bình 38 lượt/ngày (19–21/11, theo JMIC), so với khoảng 138 lượt/ngày năm 2025. Số tàu ra vào vùng Vịnh 17–23/11 giảm hơn 40% so với đầu tháng; khoảng 218 tàu nằm chờ phía đông eo biển. JMIC giữ mức đe dọa "nghiêm trọng"; IMO ghi nhận 141 vụ việc, 25 thuyền viên thiệt mạng (23/11). Ngày 26/11 Iran tuyên bố tàu trúng thủy lôi trong eo biển; theo Straits, tuyên bố này chưa được cơ quan hàng hải nào xác nhận. Ngày 25/11 Iran thêm 26 tàu, chủ yếu tàu kéo, vào danh sách không tuân thủ (tổng 266 tàu đi qua không có phép của Tehran). Ngày 25/11 UKMTO báo một tàu dầu bị vật thể không rõ nguồn gốc phát nổ gần, cách Dubai khoảng 50 hải lý về phía tây, không có thiệt hại hay thương vong.'},
   {name:'Eo Bab el-Mandeb', at:[43.4,12.6], status:'high', changed:'2026-11-25',
    note:'Houthi đe dọa và tấn công trở lại. Ngày 17/11/2026 có 44 lượt tàu đi qua. Sau khi liên quân Saudi đánh cảng Hodeidah, Houthi kêu gọi hãng tàu rút khỏi các cảng Biển Đỏ của Saudi và dọa tấn công Jeddah.'},
   {name:'Kênh đào Suez', at:[32.35,30.6], status:'moderate',
@@ -412,6 +413,26 @@ const CATS = {
   logistics:{c:'#1baf7a', t:'Logistics'}
 };
 const NEWS = [
+  {date:'2026-11-27', cat:'trade', score:4, at:[-77.04,38.9], countries:['156','840'],
+   title:'Trump đe dọa nâng thuế hàng Trung Quốc lên 40%',
+   note:'Theo Bloomberg (qua Business Standard), Trump đe dọa tăng gấp đôi thuế hàng Trung Quốc lên 40% nếu đàm phán thương mại đổ vỡ, trước cuộc gặp dự kiến với Tập Cận Bình. Mỹ vừa công bố thuế mới với Trung Quốc và các đối tác khác sau điều tra Mục 301; Bloomberg Economics ước tính thuế hiệu dụng bình quân với Trung Quốc khoảng 31%. Bộ Thương mại Trung Quốc gọi đây là hành động đơn phương.',
+   src:'https://www.business-standard.com/world-news/trump-seeks-to-keep-leverage-over-xi-with-40-china-tariff-threat-126112601588_1.html'},
+  {date:'2026-11-26', cat:'tech', score:4, at:[-77.04,38.9], countries:['840','156'],
+   title:'Quốc hội Mỹ tiến tới siết kiểm soát xuất khẩu thiết bị chip',
+   note:'Sau cáo buộc chip Nvidia bị buôn lậu sang Trung Quốc, Quốc hội Mỹ xem xét luật rộng hơn, trong đó có Đạo luật MATCH buộc đồng minh áp hạn chế tương tự với thiết bị sản xuất chip bán cho Trung Quốc. Cổ phiếu Nvidia giảm 4% ngày 25/11; theo bài báo, luật có thể bị đẩy sang 2027 nếu không kịp trước hạn ngân sách 11/12.',
+   src:'https://wisevoter.com/world/us/2026/11/26/congress-chip-export-controls-nvidia-smuggling'},
+  {date:'2026-11-26', cat:'conflict', score:4, at:[47.9,29.3], countries:['364','414','380'],
+   title:'Drone Iran giết hai công dân Ý ở Kuwait',
+   note:'Theo Bloomberg (dẫn ANSA), một drone của Iran tấn công Kuwait hôm 26/11 làm hai dân thường Ý làm việc cho Rheinmetall thiệt mạng. Trước đó, ngày 18/11 Iran đã tấn công Kuwait và Bahrain, nhắm căn cứ Ali Al Salem.',
+   src:'https://www.spokesman.com/stories/2026/nov/26/oil-climbs-as-yemens-houthi-rebels-strike-key-saud'},
+  {date:'2026-11-26', cat:'logistics', score:4, at:[56.4,26.5], countries:['364'],
+   title:'Iran nói tàu dầu trúng thủy lôi trong eo Hormuz',
+   note:'Theo Irish Times (dẫn Reuters), Iran tuyên bố ít nhất hai tàu trúng thủy lôi trong eo biển; Fars dẫn Quân đội Iran cho biết một tàu dầu trúng mìn và bốc cháy trong vùng hạn chế. Theo Straits, tuyên bố này chưa được cơ quan hàng hải nào xác nhận. Brent 94,71 USD sáng 26/11.',
+   src:'https://www.irishtimes.com/business/markets/2026/11/26/oil-rises-on-supply-concerns-as-iran-claims-mine-strikes-on-ships'},
+  {date:'2026-11-26', cat:'conflict', score:4, at:[42.56,16.89], countries:['682','887'],
+   title:'Houthi tấn công nhà máy lọc dầu Jazan của Saudi',
+   note:'Theo Saudi Press Agency dẫn nguồn Bộ Năng lượng, Houthi tấn công nhà máy Jazan (400.000 thùng/ngày) trên bờ Biển Đỏ, làm gián đoạn một số hoạt động. Brent gần 96 USD sau khi tăng gần 6% trong hai phiên. Một số nguồn khác nêu mục tiêu là Ras Tanura, nên chi tiết cần thận trọng.',
+   src:'https://www.spokesman.com/stories/2026/nov/26/oil-climbs-as-yemens-houthi-rebels-strike-key-saud'},
   {date:'2026-11-25', cat:'logistics', score:4, at:[56.4,26.5], countries:['364'],
    title:'Iran đưa thêm 26 tàu, chủ yếu tàu kéo, vào danh sách vi phạm Hormuz',
    note:'Cơ quan Eo biển Vịnh Ba Tư của Iran thêm 26 tàu, chủ yếu tàu kéo, vào danh sách không tuân thủ, nâng tổng lên 266 tàu đi qua eo biển mà không có phép của Tehran. IMO cho biết một số tàu kéo trong khu vực đã bị hư hại gần đây.',
@@ -539,6 +560,13 @@ const NEWS = [
 ];
 
 const SOURCES = [
+  ['Trump đe dọa thuế 40% với Trung Quốc — Business Standard (Bloomberg), 26/11/2026','https://www.business-standard.com/world-news/trump-seeks-to-keep-leverage-over-xi-with-40-china-tariff-threat-126112601588_1.html'],
+  ['Quốc hội Mỹ siết kiểm soát chip — Wisevoter, 26/11/2026','https://wisevoter.com/world/us/2026/11/26/congress-chip-export-controls-nvidia-smuggling'],
+  ['Iran tuyên bố tàu trúng thủy lôi ở Hormuz — Irish Times (Reuters), 26/11/2026','https://www.irishtimes.com/business/markets/2026/11/26/oil-rises-on-supply-concerns-as-iran-claims-mine-strikes-on-ships'],
+  ['Houthi tấn công Jazan; drone Iran giết hai người Ý ở Kuwait — Spokesman-Review (Bloomberg), 26/11/2026','https://www.spokesman.com/stories/2026/nov/26/oil-climbs-as-yemens-houthi-rebels-strike-key-saud'],
+  ['Hormuz: lưu lượng tàu tăng trong tháng 11 dù tấn công tăng — gCaptain (Bloomberg), 26/11/2026','https://gcaptain.com/hormuz-tanker-traffic-rises-this-month-even-as-attacks-increase/'],
+  ['Tình hình eo Hormuz 26/11/2026 — Straits Daily Brief (AI-assisted)','https://straits.live/briefs/2026-11-26'],
+  ['Israel không kích Gaza, 10 người chết — Local10 (AP), 26/11/2026','https://www.local10.com/news/world/2026/11/26/israeli-strikes-kill-10-in-gaza-as-iranian-drones-kill-2-italians-in-kuwait-and-other-mideast-news/'],
   ['Iran thêm 26 tàu vào danh sách vi phạm Hormuz — Insurance Journal (Bloomberg), 25/11/2026','https://www.insurancejournal.com/news/international/2026/11/25/893726.htm'],
   ['Houthi tuyên bố tấn công Ras Tanura; Brent tăng — The Nation, 25/11/2026','https://www.nationthailand.com/news/world/40073934'],
   ['Anthropic ra mắt Claude Ship — Dataconomy, 25/11/2026','https://dataconomy.com/2026/11/25/anthropic-launches-claude-ship-for-ai-code-reviews-and'],
