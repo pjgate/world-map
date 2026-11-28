@@ -5,6 +5,12 @@ Quy ước số phiên bản `MAJOR.MINOR.PATCH`:
 - **MINOR** (1.**4**.0): thêm tính năng hoặc lớp thông tin mới.
 - **MAJOR** (**2**.0.0): thay đổi lớn về giao diện hoặc cấu trúc dữ liệu.
 
+## v1.4.10 — 28/11/2026
+
+- Thêm 2 tin trong khung 27/11 (07:30) – 28/11 (07:30) GMT+7: Mỹ vô hiệu hóa thêm một tàu cố phá phong tỏa Iran (CENTCOM, báo cáo 27/11); Ukraine đề xuất ngừng bắn trên Biển Đen và đang chờ Nga phản hồi (27/11).
+- Cập nhật eo Hormuz, xung đột Nga–Ukraine và Iran–Israel/Mỹ (Iran phủ nhận chiến dịch ở Kuwait).
+- Không có tin Nvidia/Jensen Huang hay Anthropic mới đạt tiêu chí trong khung. Bỏ qua cáo buộc Claude làm giảm chất lượng nghiên cứu AI (chưa có bằng chứng kiểm chứng).
+
 ## v1.4.9 — 27/11/2026
 
 - Thêm 5 tin trong khung 26/11 (07:30) – 27/11 (07:30) GMT+7: Houthi tấn công nhà máy lọc dầu Jazan của Saudi (26/11); Iran tuyên bố tàu trúng thủy lôi ở Hormuz (26/11); drone Iran giết hai công dân Ý ở Kuwait (26/11); Quốc hội Mỹ tiến tới siết kiểm soát thiết bị chip (26/11); Trump đe dọa thuế 40% với Trung Quốc (27/11 GMT+7).
